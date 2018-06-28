@@ -1,0 +1,11 @@
+//ext {
+//    maven_repo = 'd:/install/repo'
+//
+//    libraries = [
+//
+//            commons-codec   : 'commons-codec:commons-codec:1.8'
+//
+//    ]
+//
+//
+//}
