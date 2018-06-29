@@ -55,9 +55,9 @@ public class TradesObserver {
         stats.setBuy(buyStatistics);
         stats.setSell(sellStatistics);
         stats.setPair(pairConverter.getFromString(pair));
-        lastCheckDate = currentDate;
         tradingList.add(stats);
       }
+      lastCheckDate = currentDate;
       return tradingList;
     }
   }

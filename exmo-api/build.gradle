@@ -1,4 +1,9 @@
 
+configurations {
+    // configuration that holds jars to copy into lib
+    compile
+}
+
     dependencies {
         compile group: 'commons-codec', name: 'commons-codec', version: '1.8'
         compile group: 'com.squareup.okhttp3', name: 'okhttp', version: '3.1.2'
@@ -14,3 +19,33 @@
         compile group: 'ch.qos.logback', name: 'logback-classic', version: '1.2.3'
 
     }
+
+    jar.doFirst {
+        manifest {
+            def manifestFile = "${projectDir}/src/main/resources/META-INF/MANIFEST.MF"
+            if ( new File( manifestFile ).exists() )
+                from ( manifestFile )
+            configurations.compile.getAllDependencies().withType(ProjectDependency).each {dep->
+                def dependantProjects = dep.getDependencyProject()
+                def projects = project(dependantProjects.path).libsDir.list().findAll{it.endsWith('.jar')}
+                projects.removeAll(projects.findAll{it.endsWith('test.jar')})
+            }
+
+            def compileFiles = configurations.compile.files{ it instanceof ExternalDependency }.collect  {
+                File file = it
+                "lib/${file.name}"
+            }.join(' ')
+
+            def manifestPath = compileFiles
+            logger.info 'Manifest: '+ manifestPath
+            attributes 'Class-Path': manifestPath
+            attributes 'Build-date': new Date();
+            attributes 'Application-Version': project.version
+        }
+    }
+
+jar {
+    into ('lib') {
+        from configurations.compile
+    }
+}
