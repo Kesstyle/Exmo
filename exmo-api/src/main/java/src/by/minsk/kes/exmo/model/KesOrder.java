@@ -12,7 +12,7 @@ public class KesOrder implements Serializable {
     private String pair;
     private BigDecimal price;
     private BigDecimal quantity;
-    // It may be actually calculated by unusual logic on Exmo, so leave this field independent for now
+    // It may be actually calculated by unusual logic on ExmoRestAdapter, so leave this field independent for now
     private BigDecimal totalAmount;
 
     public Date getDate() {

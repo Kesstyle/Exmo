@@ -7,7 +7,6 @@ import src.by.minsk.kes.exmo.model.ExTrade;
 import src.by.minsk.kes.exmo.model.KesOrder;
 import src.by.minsk.kes.exmo.model.KesOrderType;
 
-import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Map;
 
@@ -28,8 +27,6 @@ public class KesTradeConverter extends GenericStringKeyConverter<KesOrder, ExTra
     kesOrder.setQuantity(source.getQuantity());
     kesOrder.setTotalAmount(source.getAmount());
     kesOrder.setDate(getDateFromUnix(source.getUnixDate(), false));
-    LOG.debug(String.format("Total amount for %s order was %s",
-        new SimpleDateFormat("dd MMM HH:mm:ss").format(kesOrder.getDate()), kesOrder.getTotalAmount()));
     return kesOrder;
   }
 

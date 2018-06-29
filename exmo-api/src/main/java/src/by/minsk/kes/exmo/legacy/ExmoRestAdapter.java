@@ -19,13 +19,12 @@ import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
 import java.util.Map;
 
-
-public class Exmo {
+public class ExmoRestAdapter {
   private static long _nonce;
   private String _key;
   private String _secret;
 
-  public Exmo(String key, String secret) {
+  public ExmoRestAdapter(String key, String secret) {
     _nonce = System.nanoTime();
     _key = key;
     _secret = secret;
@@ -112,7 +111,7 @@ public class Exmo {
     final OkHttpClient client = new OkHttpClient();
     try {
       HttpUrl.Builder urlBuilder = HttpUrl.parse("https://api.exmo.com/v1/trades/").newBuilder();
-      urlBuilder.addQueryParameter("pair", "BTC_USD");
+      urlBuilder.addQueryParameter("pair", "BTC_USD,EOS_USD,BTG_USD,XRP_USD,BCH_USD,HBZ_USD,ETH_USD,DASH_USD,XMR_USD,ZEC_USD");
       final Request request = new Request.Builder().
           url(urlBuilder.build().toString()).build();
       final Response response = client.newCall(request).execute();
