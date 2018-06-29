@@ -1,9 +1,10 @@
 package src.by.minsk.kes.exmo.model;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
 
-public class KesOrder {
+public class KesOrder implements Serializable {
 
     private Date date;
     private Long id;

@@ -2,45 +2,35 @@ package src.by.minsk.kes.exmo.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 
-public class ExOrder {
+public class ExTrade implements Serializable {
 
-  @JsonProperty("date")
-  private Long dateLong;
+  @JsonProperty("trade_id")
+  private Long tradeId;
 
-  @JsonProperty("order_id")
-  private Long orderId;
-
-  @JsonProperty("order_type")
+  @JsonProperty("type")
   private String orderType;
 
-  @JsonProperty("pair")
-  private String pair;
-
-  @JsonProperty("price")
-  private BigDecimal price;
+  @JsonProperty("date")
+  private Long unixDate;
 
   @JsonProperty("quantity")
   private BigDecimal quantity;
 
+  @JsonProperty("price")
+  private BigDecimal price;
+
   @JsonProperty("amount")
   private BigDecimal amount;
 
-  public Long getDateLong() {
-    return dateLong;
+  public Long getTradeId() {
+    return tradeId;
   }
 
-  public void setDateLong(Long dateLong) {
-    this.dateLong = dateLong;
-  }
-
-  public Long getOrderId() {
-    return orderId;
-  }
-
-  public void setOrderId(Long orderId) {
-    this.orderId = orderId;
+  public void setTradeId(Long tradeId) {
+    this.tradeId = tradeId;
   }
 
   public String getOrderType() {
@@ -51,20 +41,12 @@ public class ExOrder {
     this.orderType = orderType;
   }
 
-  public String getPair() {
-    return pair;
+  public Long getUnixDate() {
+    return unixDate;
   }
 
-  public void setPair(String pair) {
-    this.pair = pair;
-  }
-
-  public BigDecimal getPrice() {
-    return price;
-  }
-
-  public void setPrice(BigDecimal price) {
-    this.price = price;
+  public void setUnixDate(Long unixDate) {
+    this.unixDate = unixDate;
   }
 
   public BigDecimal getQuantity() {
@@ -73,6 +55,14 @@ public class ExOrder {
 
   public void setQuantity(BigDecimal quantity) {
     this.quantity = quantity;
+  }
+
+  public BigDecimal getPrice() {
+    return price;
+  }
+
+  public void setPrice(BigDecimal price) {
+    this.price = price;
   }
 
   public BigDecimal getAmount() {
@@ -85,13 +75,12 @@ public class ExOrder {
 
   @Override
   public String toString() {
-    return "ExOrder{" +
-        "dateLong=" + dateLong +
-        ", orderId=" + orderId +
+    return "ExTrade{" +
+        "tradeId=" + tradeId +
         ", orderType='" + orderType + '\'' +
-        ", pair='" + pair + '\'' +
-        ", price=" + price +
+        ", unixDate=" + unixDate +
         ", quantity=" + quantity +
+        ", price=" + price +
         ", amount=" + amount +
         '}';
   }
