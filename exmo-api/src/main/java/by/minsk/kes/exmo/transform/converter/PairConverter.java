@@ -1,6 +1,6 @@
 package by.minsk.kes.exmo.transform.converter;
 
-import by.minsk.kes.exmo.model.Pair;
+import by.minsk.kes.exmo.model.domain.Pair;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 

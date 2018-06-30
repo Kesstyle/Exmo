@@ -1,8 +1,8 @@
 package by.minsk.kes.exmo.transform.converter;
 
-import by.minsk.kes.exmo.model.KesOrderType;
-import by.minsk.kes.exmo.model.KesTradingStatisticsInfo;
-import by.minsk.kes.exmo.model.Pair;
+import by.minsk.kes.exmo.model.domain.KesOrderType;
+import by.minsk.kes.exmo.model.domain.KesTradingStatisticsInfo;
+import by.minsk.kes.exmo.model.domain.Pair;
 import org.springframework.stereotype.Service;
 
 @Service

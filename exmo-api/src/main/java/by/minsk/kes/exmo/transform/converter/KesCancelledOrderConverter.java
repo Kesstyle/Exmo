@@ -1,8 +1,8 @@
 package by.minsk.kes.exmo.transform.converter;
 
-import by.minsk.kes.exmo.model.ExCancelledOrder;
-import by.minsk.kes.exmo.model.KesOrder;
-import by.minsk.kes.exmo.model.KesOrderType;
+import by.minsk.kes.exmo.model.api.ExCancelledOrder;
+import by.minsk.kes.exmo.model.domain.KesOrder;
+import by.minsk.kes.exmo.model.domain.KesOrderType;
 import org.springframework.stereotype.Service;
 
 @Service

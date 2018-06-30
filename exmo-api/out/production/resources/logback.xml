@@ -19,6 +19,17 @@
         </encoder>
     </appender>
 
+    <appender name="UserOrdersAppender" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>D:/devei/INSTALL/logs/exmo/orders.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>D:/devei/INSTALL/logs/exmo/orders.%d{yyyy-MM-dd}.log</fileNamePattern>
+            <maxHistory>30</maxHistory>
+        </rollingPolicy>
+        <encoder>
+            <pattern>%d{yyyy:MM:dd HH:mm:ss:SSS} %m%n</pattern>
+        </encoder>
+    </appender>
+
     <appender name="RestAdapterAppender" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <file>D:/devei/INSTALL/logs/exmo/restcalls.log</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
@@ -30,12 +41,32 @@
         </encoder>
     </appender>
 
-    <logger name="src.by.minsk.kes.exmo.legacy" level="DEBUG" additivity="false">
+    <appender name="CommonAppender" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>D:/devei/INSTALL/logs/exmo/server.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>D:/devei/INSTALL/logs/exmo/server.%d{yyyy-MM-dd}.log</fileNamePattern>
+            <maxHistory>30</maxHistory>
+        </rollingPolicy>
+        <encoder>
+            <pattern>[%-5p] %d{yyyy:MM:dd HH:mm:ss:SSS} %c: %m%n</pattern>
+        </encoder>
+    </appender>
+
+
+    <logger name="Adapter" level="DEBUG" additivity="false">
         <appender-ref ref="RestAdapterAppender"/>
     </logger>
 
-    <logger name="src.by.minsk.kes.exmo" level="DEBUG" additivity="false">
+    <logger name="UserOrders" level="DEBUG" additivity="false">
+        <appender-ref ref="UserOrdersAppender"/>
+    </logger>
+
+    <logger name="Trades" level="DEBUG" additivity="false">
         <appender-ref ref="TradesAppender"/>
+    </logger>
+
+    <logger name="by.minsk" level="DEBUG" additivity="false">
+        <appender-ref ref="CommonAppender"/>
     </logger>
 
     <root level="DEBUG">

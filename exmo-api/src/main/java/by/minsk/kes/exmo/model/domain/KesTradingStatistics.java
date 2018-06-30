@@ -1,4 +1,4 @@
-package by.minsk.kes.exmo.model;
+package by.minsk.kes.exmo.model.domain;
 
 import java.io.Serializable;
 
@@ -34,8 +34,8 @@ public class KesTradingStatistics implements Serializable {
 
   @Override
   public String toString() {
-    return String.format("\r\n%s === ", pair) +
-        " SELL === " + sell +
-        "=== BUY === " + buy;
+    return String.format("\r\n%s ### ", pair) +
+        " SELL ### " + sell +
+        "### BUY ### " + buy;
   }
 }

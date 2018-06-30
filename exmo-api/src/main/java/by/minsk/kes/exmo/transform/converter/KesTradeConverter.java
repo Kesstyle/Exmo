@@ -1,8 +1,8 @@
 package by.minsk.kes.exmo.transform.converter;
 
-import by.minsk.kes.exmo.model.ExTrade;
-import by.minsk.kes.exmo.model.KesOrder;
-import by.minsk.kes.exmo.model.KesOrderType;
+import by.minsk.kes.exmo.model.api.ExTrade;
+import by.minsk.kes.exmo.model.domain.KesOrder;
+import by.minsk.kes.exmo.model.domain.KesOrderType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -31,8 +31,8 @@ public class KesTradeConverter extends GenericStringKeyConverter<KesOrder, ExTra
   }
 
   @Override
-  public Map<String, List<KesOrder>> convert(final Map<String, List<ExTrade>> source) {
-    final Map<String, List<KesOrder>> result = super.convert(source);
+  public Map<String, List<KesOrder>> convertMapCollection(final Map<String, List<ExTrade>> source) {
+    final Map<String, List<KesOrder>> result = super.convertMapCollection(source);
     if (result != null) {
       for (final Map.Entry<String, List<KesOrder>> entry : result.entrySet()) {
         final List<KesOrder> orderList = entry.getValue();

@@ -8,6 +8,7 @@ import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 @Configuration
 @ComponentScan(basePackages = "by.minsk")
 @Import(ExmoConfig.class)
+@EnableMBeanExport
 public class AppConfig {
 
   @Bean

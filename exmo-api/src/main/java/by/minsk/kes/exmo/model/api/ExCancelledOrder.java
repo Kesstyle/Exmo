@@ -1,4 +1,4 @@
-package by.minsk.kes.exmo.model;
+package by.minsk.kes.exmo.model.api;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 

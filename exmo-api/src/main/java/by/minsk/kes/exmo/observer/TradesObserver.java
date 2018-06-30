@@ -1,6 +1,6 @@
 package by.minsk.kes.exmo.observer;
 
-import by.minsk.kes.exmo.model.*;
+import by.minsk.kes.exmo.model.domain.*;
 import by.minsk.kes.exmo.transform.converter.PairConverter;
 import by.minsk.kes.exmo.transform.converter.StatisticsBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
