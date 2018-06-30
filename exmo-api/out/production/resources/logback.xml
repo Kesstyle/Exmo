@@ -19,6 +19,21 @@
         </encoder>
     </appender>
 
+    <appender name="RestAdapterAppender" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>D:/devei/INSTALL/logs/exmo/restcalls.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>D:/devei/INSTALL/logs/exmo/restcalls.%d{yyyy-MM-dd}.log</fileNamePattern>
+            <maxHistory>30</maxHistory>
+        </rollingPolicy>
+        <encoder>
+            <pattern>[%-5p] %d{yyyy:MM:dd HH:mm:ss:SSS} %m%n</pattern>
+        </encoder>
+    </appender>
+
+    <logger name="src.by.minsk.kes.exmo.legacy" level="DEBUG" additivity="false">
+        <appender-ref ref="RestAdapterAppender"/>
+    </logger>
+
     <logger name="src.by.minsk.kes.exmo" level="DEBUG" additivity="false">
         <appender-ref ref="TradesAppender"/>
     </logger>

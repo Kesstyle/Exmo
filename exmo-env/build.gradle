@@ -1,0 +1,39 @@
+plugins {
+    id 'java'
+}
+
+group 'kes'
+version '1.0-SNAPSHOT'
+
+sourceCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile group: 'org.springframework', name: 'spring-web', version: '4.3.3.RELEASE'
+    compile group: 'org.springframework', name: 'spring-context', version: '4.3.3.RELEASE'
+}
+
+task moveProperties << {
+    copyDir("$projectDir/build/resources/main/modules", project.ext.artifactPath + "/modules")
+    copyDir("$projectDir/build/resources/main/batch", project.ext.artifactPath)
+}
+
+moveProperties.dependsOn build
+
+def copyDir(from, to) {
+    println "Copying from ${from} to ${to} ..."
+    new File(from).eachFileRecurse { file ->
+        def extraPath = file.getPath().substring(from.length())
+        extraPath = extraPath.replaceAll('\\\\', '/')
+        if (!file.isDirectory()) {
+            def destPath = to + extraPath
+            new File(destPath).getParentFile().mkdirs()
+            //println("Copying ${file.name} to " + destPath + " ...")
+            new File(destPath).delete()
+            new File(destPath) << file.text
+        }
+    }
+}

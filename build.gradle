@@ -16,3 +16,7 @@ subprojects {
         mavenCentral()
     }
 }
+
+allprojects {
+    project.ext.artifactPath = "C:/Users/PC/Desktop/Exmoapp"
+}

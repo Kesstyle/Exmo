@@ -5,6 +5,7 @@ configurations {
 }
 
     dependencies {
+        compile project(':exmo-env')
         compile group: 'commons-codec', name: 'commons-codec', version: '1.8'
         compile group: 'com.squareup.okhttp3', name: 'okhttp', version: '3.1.2'
         compile group: 'com.squareup.okio', name: 'okio', version: '1.6.0'
@@ -20,15 +21,23 @@ configurations {
 
     }
 
+jar.dependsOn ':exmo-env:moveProperties'
+
     jar.doFirst {
         manifest {
             def manifestFile = "${projectDir}/src/main/resources/META-INF/MANIFEST.MF"
             if ( new File( manifestFile ).exists() )
                 from ( manifestFile )
+            def requiredProject = ""
             configurations.compile.getAllDependencies().withType(ProjectDependency).each {dep->
                 def dependantProjects = dep.getDependencyProject()
                 def projects = project(dependantProjects.path).libsDir.list().findAll{it.endsWith('.jar')}
                 projects.removeAll(projects.findAll{it.endsWith('test.jar')})
+                def depProjNames = projects.collect {
+                    "lib/" + it
+                }.join(' ')
+                requiredProject = depProjNames + ' '
+                logger.info 'Required Project: ' + requiredProject
             }
 
             def compileFiles = configurations.compile.files{ it instanceof ExternalDependency }.collect  {
@@ -36,7 +45,7 @@ configurations {
                 "lib/${file.name}"
             }.join(' ')
 
-            def manifestPath = compileFiles
+            def manifestPath = requiredProject + compileFiles
             logger.info 'Manifest: '+ manifestPath
             attributes 'Class-Path': manifestPath
             attributes 'Build-date': new Date();
@@ -49,3 +58,15 @@ jar {
         from configurations.compile
     }
 }
+
+task deployToJboss (type: Copy) {
+    from jar
+    into project.ext.artifactPath
+}
+
+task copyLibs (type: Copy) {
+    from configurations.compile
+    into project.ext.artifactPath + "/lib"
+}
+
+deployToJboss.dependsOn copyLibs

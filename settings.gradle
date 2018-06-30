@@ -1,2 +1,4 @@
 rootProject.name = 'exmo'
 include 'exmo-api'
+include 'exmo-env'
+
