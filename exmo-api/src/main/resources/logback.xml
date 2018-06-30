@@ -30,11 +30,11 @@
         </encoder>
     </appender>
 
-    <logger name="src.by.minsk.kes.exmo.legacy" level="DEBUG" additivity="false">
+    <logger name="Adapter" level="DEBUG" additivity="false">
         <appender-ref ref="RestAdapterAppender"/>
     </logger>
 
-    <logger name="src.by.minsk.kes.exmo" level="DEBUG" additivity="false">
+    <logger name="by.minsk.kes.exmo" level="DEBUG" additivity="false">
         <appender-ref ref="TradesAppender"/>
     </logger>
 

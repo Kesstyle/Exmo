@@ -35,7 +35,7 @@ public class KesTradingStatistics implements Serializable {
   @Override
   public String toString() {
     return String.format("\r\n%s === ", pair) +
-        " SELL: " + sell +
-        "; BUY: " + buy;
+        " SELL === " + sell +
+        "=== BUY === " + buy;
   }
 }
