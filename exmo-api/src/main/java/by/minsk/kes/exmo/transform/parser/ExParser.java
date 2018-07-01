@@ -2,6 +2,7 @@ package by.minsk.kes.exmo.transform.parser;
 
 import by.minsk.kes.exmo.model.api.ExCancelledOrder;
 import by.minsk.kes.exmo.model.api.ExOrderBook;
+import by.minsk.kes.exmo.model.api.ExTicker;
 import by.minsk.kes.exmo.model.api.ExTrade;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -51,6 +52,19 @@ public class ExParser {
         }
         try {
             final TypeReference<Map<String, ExOrderBook>> exUserOrdersRef = new TypeReference<Map<String, ExOrderBook>>() {
+            };
+            return mapper.readValue(json, exUserOrdersRef);
+        } catch (final IOException e) {
+            return null;
+        }
+    }
+
+    public Map<String, ExTicker> buildTickerFromJson(final String json) {
+        if (StringUtils.isBlank(json)) {
+            return null;
+        }
+        try {
+            final TypeReference<Map<String, ExTicker>> exUserOrdersRef = new TypeReference<Map<String, ExTicker>>() {
             };
             return mapper.readValue(json, exUserOrdersRef);
         } catch (final IOException e) {
