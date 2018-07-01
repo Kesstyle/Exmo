@@ -38,18 +38,12 @@ public class TradesObserveTimerTask extends KesTimerTask {
     private TradesObserver tradesObserver;
 
     @Autowired
-    private ExmoRestAdapter exmoRestAdapter;
-
-    @Autowired
-    private ExParser exOrderParser;
-
-    @Autowired
     private KesTradeConverter kesTradeConverter;
 
     @Override
     public void run() {
         final String json = exmoRestAdapter.get(getBaseUrl(), tradesOperation, getParamsMap());
-        final Map<String, List<ExTrade>> exTrades = exOrderParser.buildTradeFromJson(json);
+        final Map<String, List<ExTrade>> exTrades = exParser.buildTradeFromJson(json);
         final Map<String, List<KesOrder>> kesOrders = kesTradeConverter.convertMapCollection(exTrades);
         final List<KesTradingStatistics> statistics = tradesObserver.analyze(kesOrders, new Date());
         if (statistics != null) {

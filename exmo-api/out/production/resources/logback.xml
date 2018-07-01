@@ -30,6 +30,17 @@
         </encoder>
     </appender>
 
+    <appender name="TickerAppender" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>D:/devei/INSTALL/logs/exmo/cryptostatistics.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>D:/devei/INSTALL/logs/exmo/cryptostatistics.%d{yyyy-MM-dd}.log</fileNamePattern>
+            <maxHistory>30</maxHistory>
+        </rollingPolicy>
+        <encoder>
+            <pattern>%m%n</pattern>
+        </encoder>
+    </appender>
+
     <appender name="RestAdapterAppender" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <file>D:/devei/INSTALL/logs/exmo/restcalls.log</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
@@ -59,6 +70,10 @@
 
     <logger name="UserOrders" level="DEBUG" additivity="false">
         <appender-ref ref="UserOrdersAppender"/>
+    </logger>
+
+    <logger name="Ticker" level="DEBUG" additivity="false">
+        <appender-ref ref="TickerAppender"/>
     </logger>
 
     <logger name="Trades" level="DEBUG" additivity="false">

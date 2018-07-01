@@ -41,16 +41,7 @@ public class OrderBookObserveTimerTask extends KesTimerTask {
     private String ordersOperation;
 
     @Autowired
-    private ExmoRestAdapter exmoRestAdapter;
-
-    @Autowired
-    private ExParser exParser;
-
-    @Autowired
     private KesUserOrderConverter kesUserOrderConverter;
-
-    @Autowired
-    private PairConverter pairConverter;
 
     @Override
     public void run() {

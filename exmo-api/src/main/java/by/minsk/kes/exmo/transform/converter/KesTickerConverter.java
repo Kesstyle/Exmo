@@ -15,6 +15,7 @@ public class KesTickerConverter extends GenericStringKeyConverter<KesTickerInfo,
         }
         final KesTickerInfo result = new KesTickerInfo();
         BeanUtils.copyProperties(source, result);
+        result.setLastUpdated(getDateFromUnix(source.getUpdated(), true));
         return result;
     }
 }

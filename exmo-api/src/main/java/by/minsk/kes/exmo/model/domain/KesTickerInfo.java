@@ -2,6 +2,7 @@ package by.minsk.kes.exmo.model.domain;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.Date;
 
 public class KesTickerInfo implements Serializable {
 
@@ -13,7 +14,7 @@ public class KesTickerInfo implements Serializable {
     private BigDecimal avgPrice;
     private BigDecimal volume;
     private BigDecimal volumeSellCurrency;
-    private Long updated;
+    private Date lastUpdated;
 
     public BigDecimal getBuyPrice() {
         return buyPrice;
@@ -79,12 +80,12 @@ public class KesTickerInfo implements Serializable {
         this.volumeSellCurrency = volumeSellCurrency;
     }
 
-    public Long getUpdated() {
-        return updated;
+    public Date getLastUpdated() {
+        return lastUpdated;
     }
 
-    public void setUpdated(Long updated) {
-        this.updated = updated;
+    public void setLastUpdated(Date lastUpdated) {
+        this.lastUpdated = lastUpdated;
     }
 
     public BigDecimal getVolatilePercent() {
@@ -102,7 +103,7 @@ public class KesTickerInfo implements Serializable {
                 ", avgPrice=" + avgPrice +
                 ", volume=" + volume +
                 ", volumeSellCurrency=" + volumeSellCurrency +
-                ", updated=" + updated +
+                ", lastUpdated=" + lastUpdated +
                 '}';
     }
 }

@@ -6,6 +6,7 @@ import by.minsk.kes.exmo.model.api.ExCancelledOrder;
 import by.minsk.kes.exmo.model.domain.KesOrder;
 import by.minsk.kes.exmo.observer.task.KesTimerTask;
 import by.minsk.kes.exmo.observer.task.OrderBookObserveTimerTask;
+import by.minsk.kes.exmo.observer.task.TickerTimerTask;
 import by.minsk.kes.exmo.observer.task.TradesObserveTimerTask;
 import by.minsk.kes.exmo.transform.converter.KesCancelledOrderConverter;
 import by.minsk.kes.exmo.transform.parser.ExParser;
@@ -29,9 +30,15 @@ public class Main {
             cancelledOrders(e);
             trades();
             orders();
+            ticker();
         } catch (final Exception e) {
             e.printStackTrace();
         }
+    }
+
+    private static void ticker() {
+        final ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
+        executor.scheduleAtFixedRate(getTickerTask(), 10, 30, TimeUnit.SECONDS);
     }
 
     private static void orders() {
@@ -55,6 +62,10 @@ public class Main {
 
     private static KesTimerTask getOrdersTask() {
         return (OrderBookObserveTimerTask) context.getBean("ordersTask");
+    }
+
+    private static TickerTimerTask getTickerTask() {
+        return (TickerTimerTask) context.getBean("tickerTask");
     }
 
     private static void cancelledOrders(final ExmoRestAdapter e) {
