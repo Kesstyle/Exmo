@@ -10,6 +10,7 @@ import by.minsk.kes.exmo.observer.task.TickerTimerTask;
 import by.minsk.kes.exmo.observer.task.TradesObserveTimerTask;
 import by.minsk.kes.exmo.transform.converter.KesCancelledOrderConverter;
 import by.minsk.kes.exmo.transform.parser.ExParser;
+import by.minsk.model.AuthPair;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
@@ -23,11 +24,13 @@ public class Main {
 
     private static final ApplicationContext context = new AnnotationConfigApplicationContext(AppConfig.class);
 
+    private static ExmoRestAdapter exmo;
+
     public static void main(String[] args) {
         try {
-            ExmoRestAdapter e = new ExmoRestAdapter("key", "secret");
-            userInfo(e);
-            cancelledOrders(e);
+            exmo = getExmoAdapter();
+            userInfo();
+            cancelledOrders();
             trades();
             orders();
             ticker();
@@ -51,8 +54,8 @@ public class Main {
         executor.scheduleAtFixedRate(getTradesTask(), 5, 30, TimeUnit.SECONDS);
     }
 
-    private static void userInfo(final ExmoRestAdapter e) {
-        String result = e.post("user_info", null);
+    private static void userInfo() {
+        String result = exmo.post("user_info", null);
         System.out.println(result);
     }
 
@@ -68,8 +71,8 @@ public class Main {
         return (TickerTimerTask) context.getBean("tickerTask");
     }
 
-    private static void cancelledOrders(final ExmoRestAdapter e) {
-        String result = e.post("user_cancelled_orders", new HashMap<String, String>() {{
+    private static void cancelledOrders() {
+        String result = exmo.post("user_cancelled_orders", new HashMap<String, String>() {{
             put("limit", "2");
             put("offset", "0");
         }});
@@ -80,5 +83,10 @@ public class Main {
         KesCancelledOrderConverter converter = new KesCancelledOrderConverter();
         final List<KesOrder> kesOrderList = converter.convert(exCancelledOrderList);
         System.out.println(kesOrderList);
+    }
+
+    private static ExmoRestAdapter getExmoAdapter() {
+        final AuthPair authPair = (AuthPair) context.getBean("authDataSource");
+        return new ExmoRestAdapter(authPair.getKey(), authPair.getSecret());
     }
 }
