@@ -14,11 +14,13 @@ import org.springframework.jmx.export.annotation.ManagedAttribute;
 import org.springframework.jmx.export.annotation.ManagedResource;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
 
 import java.math.BigDecimal;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service("tickerTask")
 @ManagedResource(description = "Manages ticker functionality")
@@ -52,17 +54,21 @@ public class TickerTimerTask extends KesTimerTask {
         if (kesTickerMap == null) {
             return null;
         }
-        final Map<String, KesTickerInfo> filteredResult = new HashMap<>();
-        final List<Pair> pairsList = pairConverter.getListFromString(pairs);
-        if (CollectionUtils.isEmpty(pairsList)) {
+        final Map<String, KesTickerInfo> filteredResult = new TreeMap<>();
+        if (StringUtils.isEmpty(pairs)) {
             return filteredResult;
         }
-        for (final Map.Entry<String, KesTickerInfo> entry : kesTickerMap.entrySet()) {
-            if (pairsList.contains(entry.getKey())) {
-                filteredResult.put(entry.getKey(), entry.getValue());
+        try {
+            for (final Map.Entry<String, KesTickerInfo> entry : kesTickerMap.entrySet()) {
+                if (pairs.contains(entry.getKey())) {
+                    filteredResult.put(entry.getKey(), entry.getValue());
+                }
             }
+        } finally {
+            return filteredResult.entrySet().stream().sorted(Map.Entry.<String, KesTickerInfo>comparingByValue(
+                    (v1, v2) -> v2.getVolatilePercent().compareTo(v1.getVolatilePercent())))
+                    .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (v1, v2) -> v1, LinkedHashMap::new));
         }
-        return filteredResult;
     }
 
     private void printTickers(final Map<String, KesTickerInfo> kesTickerMap) {
@@ -70,10 +76,12 @@ public class TickerTimerTask extends KesTimerTask {
         for (final Map.Entry<String, KesTickerInfo> entry : kesTickerMap.entrySet()) {
             final KesTickerInfo ticker = entry.getValue();
             final Pair pair = pairConverter.getFromString(entry.getKey());
-            LOG.debug(String.format("%s, %s ==> %s %s - %s %s (High: %s %s, Low: %s %s). Volatility = %s %%", ticker.getLastUpdated(), pair.toString(),
+            LOG.debug(String.format("%s, %s ==> %s %s - %s %s (High: %s %s, Low: %s %s). Volatility = %s %%",
+                    new SimpleDateFormat("HH:mm:ss:SSS").format(ticker.getLastUpdated()), pair.toString(),
                     ticker.getBuyPrice(), pair.getSecondCurrency(), ticker.getSellPrice(), pair.getSecondCurrency(), ticker.getHighPrice(),
                     pair.getSecondCurrency(), ticker.getLowPrice(), pair.getSecondCurrency(), ticker.getVolatilePercent().multiply(BigDecimal.valueOf(100))));
         }
+
         LOG.debug("=============================================================================");
     }
 

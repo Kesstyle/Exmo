@@ -53,12 +53,6 @@ jar.dependsOn ':exmo-env:moveProperties'
         }
     }
 
-jar {
-    into ('lib') {
-        from configurations.compile
-    }
-}
-
 task deployToJboss (type: Copy) {
     from jar
     into project.ext.artifactPath

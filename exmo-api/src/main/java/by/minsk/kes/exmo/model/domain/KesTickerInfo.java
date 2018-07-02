@@ -2,6 +2,7 @@ package by.minsk.kes.exmo.model.domain;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.Date;
 
 public class KesTickerInfo implements Serializable {
@@ -89,7 +90,7 @@ public class KesTickerInfo implements Serializable {
     }
 
     public BigDecimal getVolatilePercent() {
-        return highPrice.divide(lowPrice).subtract(BigDecimal.ONE);
+        return highPrice.divide(lowPrice, 4, RoundingMode.HALF_DOWN).subtract(BigDecimal.ONE);
     }
 
     @Override
