@@ -2,10 +2,7 @@ package by.minsk.kes.exmo.controller.delegate;
 
 import by.minsk.kes.exmo.controller.delegate.repository.ExmoOperationsRepository;
 import by.minsk.kes.exmo.legacy.ExmoRestAdapter;
-import by.minsk.kes.exmo.model.api.ExCancelledOrder;
-import by.minsk.kes.exmo.model.api.ExOrderBook;
-import by.minsk.kes.exmo.model.api.ExTicker;
-import by.minsk.kes.exmo.model.api.ExTrade;
+import by.minsk.kes.exmo.model.api.*;
 import by.minsk.kes.exmo.transform.parser.ExParser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -54,11 +51,9 @@ public class ExmoDelegate {
         return parser.buildCancelledOrderFromJson(result);
     }
 
-    @Deprecated
-    public String getUserInfo() {
-        final String result = exmo.post(exmoOperationsRepository.getUserInfoOperation(), null);
-        // TODO
-        return result;
+    public ExUserInfo getUserInfo(final Map<String, String> params) {
+        final String json = exmo.post(exmoOperationsRepository.getUserInfoOperation(), params);
+        return parser.buildUserInfoFromJson(json);
     }
 
     @Deprecated

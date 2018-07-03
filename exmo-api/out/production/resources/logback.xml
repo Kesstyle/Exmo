@@ -41,6 +41,17 @@
         </encoder>
     </appender>
 
+    <appender name="PotentialTradesAppender" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>D:/devei/INSTALL/logs/exmo/potential_trades.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>D:/devei/INSTALL/logs/exmo/potential_trades.%d{yyyy-MM-dd}.log</fileNamePattern>
+            <maxHistory>30</maxHistory>
+        </rollingPolicy>
+        <encoder>
+            <pattern>%d{HH:mm:ss:SSS} %m%n</pattern>
+        </encoder>
+    </appender>
+
     <appender name="RestAdapterAppender" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <file>D:/devei/INSTALL/logs/exmo/restcalls.log</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
@@ -63,6 +74,9 @@
         </encoder>
     </appender>
 
+    <logger name="PotentialTrades" level="DEBUG" additivity="false">
+        <appender-ref ref="PotentialTradesAppender"/>
+    </logger>
 
     <logger name="Adapter" level="DEBUG" additivity="false">
         <appender-ref ref="RestAdapterAppender"/>

@@ -1,12 +1,10 @@
 package by.minsk.kes.exmo.observer.task;
 
-import by.minsk.kes.exmo.legacy.ExmoRestAdapter;
 import by.minsk.kes.exmo.model.api.ExTrade;
 import by.minsk.kes.exmo.model.domain.KesOrder;
 import by.minsk.kes.exmo.model.domain.KesTradingStatistics;
 import by.minsk.kes.exmo.observer.TradesObserver;
 import by.minsk.kes.exmo.transform.converter.KesTradeConverter;
-import by.minsk.kes.exmo.transform.parser.ExParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,8 +39,10 @@ public class TradesObserveTimerTask extends KesTimerTask {
     public void run() {
         final Map<String, List<ExTrade>> exTrades = delegate.getTrades(getParamsMap());
         final Map<String, List<KesOrder>> kesOrders = kesTradeConverter.convertMapCollection(exTrades);
+        repository.setKesUserTrades(kesOrders);
         final List<KesTradingStatistics> statistics = tradesObserver.analyze(kesOrders, new Date());
         if (statistics != null) {
+            repository.setKesUserTradingStatistics(statistics);
             LOG.debug(statistics.toString() + "\r\n");
         }
     }

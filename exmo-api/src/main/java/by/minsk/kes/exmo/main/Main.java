@@ -5,10 +5,7 @@ import by.minsk.kes.exmo.controller.delegate.ExmoDelegate;
 import by.minsk.kes.exmo.legacy.ExmoRestAdapter;
 import by.minsk.kes.exmo.model.api.ExCancelledOrder;
 import by.minsk.kes.exmo.model.domain.KesOrder;
-import by.minsk.kes.exmo.observer.task.KesTimerTask;
-import by.minsk.kes.exmo.observer.task.OrderBookObserveTimerTask;
-import by.minsk.kes.exmo.observer.task.TickerTimerTask;
-import by.minsk.kes.exmo.observer.task.TradesObserveTimerTask;
+import by.minsk.kes.exmo.observer.task.*;
 import by.minsk.kes.exmo.transform.converter.KesCancelledOrderConverter;
 import by.minsk.kes.exmo.transform.parser.ExParser;
 import by.minsk.model.AuthPair;
@@ -41,13 +38,18 @@ public class Main {
             trades();
             orders();
             ticker();
+            potentialTrades();
         } catch (final Exception e) {
             e.printStackTrace();
         }
     }
 
     private static void ticker() {
-        executor.scheduleAtFixedRate(getTickerTask(), 10, 30, TimeUnit.SECONDS);
+        executor.scheduleAtFixedRate(getTickerTask(), 0, 30, TimeUnit.SECONDS);
+    }
+
+    private static void userInfo() {
+        executor.scheduleAtFixedRate(getUserInfoTask(), 0, 30, TimeUnit.SECONDS);
     }
 
     private static void orders() {
@@ -55,12 +57,11 @@ public class Main {
     }
 
     private static void trades() {
-        executor.scheduleAtFixedRate(getTradesTask(), 5, 30, TimeUnit.SECONDS);
+        executor.scheduleAtFixedRate(getTradesTask(), 0, 30, TimeUnit.SECONDS);
     }
 
-    private static void userInfo() {
-        String result = delegate.getUserInfo();
-        System.out.println(result);
+    private static void potentialTrades() {
+        executor.scheduleAtFixedRate(getPotentialTradingTask(), 5, 30, TimeUnit.SECONDS);
     }
 
     private static void cancelledOrders() {
@@ -89,9 +90,19 @@ public class Main {
         return (TickerTimerTask) context.getBean("tickerTask");
     }
 
+    private static UserInfoTimerTask getUserInfoTask() {
+        return (UserInfoTimerTask) context.getBean("userInfoTask");
+    }
+
+    private static PotentialTradingTimerTask getPotentialTradingTask() {
+        return (PotentialTradingTimerTask) context.getBean("potentialTradingTask");
+    }
+
     private static ExmoDelegate getExmoDelegate() {
         return (ExmoDelegate) context.getBean("exmoDelegate");
     }
 
-    private static ScheduledExecutorService getExecutor() {return Executors.newScheduledThreadPool(15);}
+    private static ScheduledExecutorService getExecutor() {
+        return Executors.newScheduledThreadPool(15);
+    }
 }

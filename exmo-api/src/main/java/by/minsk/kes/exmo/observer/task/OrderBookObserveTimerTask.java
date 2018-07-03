@@ -45,13 +45,13 @@ public class OrderBookObserveTimerTask extends KesTimerTask {
         try {
             final Map<String, ExOrderBook> ordersMap = delegate.getOrders(getParamsMap());
             final Map<String, KesUserOrder> kesUserOrderMap = kesUserOrderConverter.convertMap(ordersMap);
+            repository.setKesUserOrderMap(kesUserOrderMap);
             logOrders(kesUserOrderMap);
         } catch (final Exception e) {
             e.printStackTrace();
         }
     }
 
-    @Override
     protected Map<String, String> getParamsMap() {
         final Map<String, String> params = new HashMap<>();
         params.put(ORDER_PARAMETER_PAIR, getTradePairs());

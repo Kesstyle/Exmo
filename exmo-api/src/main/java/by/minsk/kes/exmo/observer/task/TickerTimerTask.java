@@ -36,10 +36,10 @@ public class TickerTimerTask extends KesTimerTask {
     public void run() {
         final Map<String, ExTicker> exTickerMap = delegate.getTicker(getParamsMap());
         final Map<String, KesTickerInfo> kesTickerMap = filter(kesTickerConverter.convertMap(exTickerMap));
+        repository.setKesTickerMap(kesTickerMap);
         printTickers(kesTickerMap);
     }
 
-    @Override
     protected Map<String, String> getParamsMap() {
         return null;
     }
