@@ -28,9 +28,6 @@ public class TradesObserveTimerTask extends KesTimerTask {
 
     private static final String TRADES_PARAMETER_PAIR = "pair";
 
-    @Value("${exmo.trades.operation}")
-    private String tradesOperation;
-
     @Value("${exmo.trades." + TRADES_PARAMETER_PAIR + "}")
     private String tradePairs;
 
@@ -42,8 +39,7 @@ public class TradesObserveTimerTask extends KesTimerTask {
 
     @Override
     public void run() {
-        final String json = exmoRestAdapter.get(getBaseUrl(), tradesOperation, getParamsMap());
-        final Map<String, List<ExTrade>> exTrades = exParser.buildTradeFromJson(json);
+        final Map<String, List<ExTrade>> exTrades = delegate.getTrades(getParamsMap());
         final Map<String, List<KesOrder>> kesOrders = kesTradeConverter.convertMapCollection(exTrades);
         final List<KesTradingStatistics> statistics = tradesObserver.analyze(kesOrders, new Date());
         if (statistics != null) {

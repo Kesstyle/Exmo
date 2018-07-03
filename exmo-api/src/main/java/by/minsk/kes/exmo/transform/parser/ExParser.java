@@ -17,8 +17,8 @@ import java.util.Map;
 @Service
 public class ExParser {
 
-    private ObjectMapper mapper = new ObjectMapper();
-
+    @Autowired
+    private ObjectMapper mapper;
 
     public List<ExCancelledOrder> buildCancelledOrderFromJson(final String json) {
         if (StringUtils.isBlank(json)) {
@@ -67,6 +67,19 @@ public class ExParser {
             final TypeReference<Map<String, ExTicker>> exUserOrdersRef = new TypeReference<Map<String, ExTicker>>() {
             };
             return mapper.readValue(json, exUserOrdersRef);
+        } catch (final IOException e) {
+            return null;
+        }
+    }
+
+    public <T> T buildFromJson(final String json) {
+        if (StringUtils.isBlank(json)) {
+            return null;
+        }
+        try {
+            final TypeReference<T> ref = new TypeReference<T>() {
+            };
+            return mapper.readValue(json, ref);
         } catch (final IOException e) {
             return null;
         }

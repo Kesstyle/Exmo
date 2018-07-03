@@ -3,6 +3,7 @@ package by.minsk.kes.exmo.configuration;
 import by.minsk.configuration.ExmoConfig;
 import by.minsk.kes.exmo.legacy.ExmoRestAdapter;
 import by.minsk.model.AuthPair;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.*;
 
@@ -12,23 +13,19 @@ import org.springframework.context.annotation.*;
 @EnableMBeanExport
 public class AppConfig {
 
-    @Value("${exmo.key}")
+    @Value("${exmo.key:key}")
     private String key;
 
-    @Value("${exmo.secret}")
+    @Value("${exmo.secret:secret}")
     private String secret;
 
     @Bean
-    AuthPair authDataSource() {
-        final AuthPair authPair = new AuthPair();
-        authPair.setKey(key);
-        authPair.setSecret(secret);
-        return authPair;
+    ExmoRestAdapter exmoRestAdapter() {
+        return new ExmoRestAdapter(key, secret);
     }
 
     @Bean
-    public ExmoRestAdapter exmoRestAdapter() {
-        final ExmoRestAdapter e = new ExmoRestAdapter("key", "secret");
-        return e;
+    ObjectMapper objectMapper() {
+        return new ObjectMapper();
     }
 }

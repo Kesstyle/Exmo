@@ -37,17 +37,13 @@ public class OrderBookObserveTimerTask extends KesTimerTask {
     @Value("${exmo.orders." + ORDER_PARAMETER_PAIR + "}")
     private String tradePairs;
 
-    @Value("${exmo.orders.operation}")
-    private String ordersOperation;
-
     @Autowired
     private KesUserOrderConverter kesUserOrderConverter;
 
     @Override
     public void run() {
         try {
-            final String json = exmoRestAdapter.get(getBaseUrl(), ordersOperation, getParamsMap());
-            final Map<String, ExOrderBook> ordersMap = exParser.buildUserOrdersFromJson(json);
+            final Map<String, ExOrderBook> ordersMap = delegate.getOrders(getParamsMap());
             final Map<String, KesUserOrder> kesUserOrderMap = kesUserOrderConverter.convertMap(ordersMap);
             logOrders(kesUserOrderMap);
         } catch (final Exception e) {

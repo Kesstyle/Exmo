@@ -1,11 +1,9 @@
 package by.minsk.kes.exmo.observer.task;
 
-import by.minsk.kes.exmo.legacy.ExmoRestAdapter;
 import by.minsk.kes.exmo.model.api.ExTicker;
 import by.minsk.kes.exmo.model.domain.KesTickerInfo;
 import by.minsk.kes.exmo.model.domain.Pair;
 import by.minsk.kes.exmo.transform.converter.KesTickerConverter;
-import by.minsk.kes.exmo.transform.parser.ExParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,13 +11,13 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.jmx.export.annotation.ManagedAttribute;
 import org.springframework.jmx.export.annotation.ManagedResource;
 import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
 import java.math.BigDecimal;
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.TreeMap;
 import java.util.stream.Collectors;
 
 @Service("tickerTask")
@@ -27,9 +25,6 @@ import java.util.stream.Collectors;
 public class TickerTimerTask extends KesTimerTask {
 
     private static final Logger LOG = LoggerFactory.getLogger("Ticker");
-
-    @Value("${exmo.ticket.operation}")
-    private String operation;
 
     @Value("${exmo.ticker.pairs}")
     private String pairs;
@@ -39,8 +34,7 @@ public class TickerTimerTask extends KesTimerTask {
 
     @Override
     public void run() {
-        final String json = exmoRestAdapter.get(getBaseUrl(), operation, getParamsMap());
-        final Map<String, ExTicker> exTickerMap = exParser.buildTickerFromJson(json);
+        final Map<String, ExTicker> exTickerMap = delegate.getTicker(getParamsMap());
         final Map<String, KesTickerInfo> kesTickerMap = filter(kesTickerConverter.convertMap(exTickerMap));
         printTickers(kesTickerMap);
     }

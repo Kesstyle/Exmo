@@ -1,6 +1,7 @@
 package by.minsk.kes.exmo.main;
 
 import by.minsk.kes.exmo.configuration.AppConfig;
+import by.minsk.kes.exmo.controller.delegate.ExmoDelegate;
 import by.minsk.kes.exmo.legacy.ExmoRestAdapter;
 import by.minsk.kes.exmo.model.api.ExCancelledOrder;
 import by.minsk.kes.exmo.model.domain.KesOrder;
@@ -11,9 +12,12 @@ import by.minsk.kes.exmo.observer.task.TradesObserveTimerTask;
 import by.minsk.kes.exmo.transform.converter.KesCancelledOrderConverter;
 import by.minsk.kes.exmo.transform.parser.ExParser;
 import by.minsk.model.AuthPair;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.springframework.stereotype.Component;
 
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.Executors;
@@ -24,13 +28,16 @@ public class Main {
 
     private static final ApplicationContext context = new AnnotationConfigApplicationContext(AppConfig.class);
 
-    private static ExmoRestAdapter exmo;
+    private static ExmoDelegate delegate;
+    private static ScheduledExecutorService executor;
 
     public static void main(String[] args) {
         try {
-            exmo = getExmoAdapter();
+            delegate = getExmoDelegate();
+            executor = getExecutor();
             userInfo();
             cancelledOrders();
+            requiredAmount();
             trades();
             orders();
             ticker();
@@ -40,23 +47,34 @@ public class Main {
     }
 
     private static void ticker() {
-        final ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
         executor.scheduleAtFixedRate(getTickerTask(), 10, 30, TimeUnit.SECONDS);
     }
 
     private static void orders() {
-        final ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
         executor.scheduleAtFixedRate(getOrdersTask(), 0, 30, TimeUnit.SECONDS);
     }
 
     private static void trades() {
-        final ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
         executor.scheduleAtFixedRate(getTradesTask(), 5, 30, TimeUnit.SECONDS);
     }
 
     private static void userInfo() {
-        String result = exmo.post("user_info", null);
+        String result = delegate.getUserInfo();
         System.out.println(result);
+    }
+
+    private static void cancelledOrders() {
+        final List<ExCancelledOrder> exCancelledOrderList = delegate.getCancelledOrders(2, 0);
+        System.out.println(exCancelledOrderList);
+        KesCancelledOrderConverter converter = new KesCancelledOrderConverter();
+        final List<KesOrder> kesOrderList = converter.convert(exCancelledOrderList);
+        System.out.println(kesOrderList);
+    }
+
+    private static void requiredAmount() {
+        String result = delegate.getRequiredAmount("BTC_USD", BigDecimal.ONE);
+        System.out.println(result);
+
     }
 
     private static KesTimerTask getTradesTask() {
@@ -71,22 +89,9 @@ public class Main {
         return (TickerTimerTask) context.getBean("tickerTask");
     }
 
-    private static void cancelledOrders() {
-        String result = exmo.post("user_cancelled_orders", new HashMap<String, String>() {{
-            put("limit", "2");
-            put("offset", "0");
-        }});
-        System.out.println(result);
-        ExParser parser = new ExParser();
-        final List<ExCancelledOrder> exCancelledOrderList = parser.buildCancelledOrderFromJson(result);
-        System.out.println(exCancelledOrderList);
-        KesCancelledOrderConverter converter = new KesCancelledOrderConverter();
-        final List<KesOrder> kesOrderList = converter.convert(exCancelledOrderList);
-        System.out.println(kesOrderList);
+    private static ExmoDelegate getExmoDelegate() {
+        return (ExmoDelegate) context.getBean("exmoDelegate");
     }
 
-    private static ExmoRestAdapter getExmoAdapter() {
-        final AuthPair authPair = (AuthPair) context.getBean("authDataSource");
-        return new ExmoRestAdapter(authPair.getKey(), authPair.getSecret());
-    }
+    private static ScheduledExecutorService getExecutor() {return Executors.newScheduledThreadPool(15);}
 }
