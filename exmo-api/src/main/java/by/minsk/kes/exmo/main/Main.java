@@ -33,7 +33,6 @@ public class Main {
             delegate = getExmoDelegate();
             executor = getExecutor();
             userInfo();
-            cancelledOrders();
             requiredAmount();
             trades();
             orders();
@@ -62,14 +61,6 @@ public class Main {
 
     private static void potentialTrades() {
         executor.scheduleAtFixedRate(getPotentialTradingTask(), 5, 30, TimeUnit.SECONDS);
-    }
-
-    private static void cancelledOrders() {
-        final List<ExCancelledOrder> exCancelledOrderList = delegate.getCancelledOrders(2, 0);
-        System.out.println(exCancelledOrderList);
-        KesCancelledOrderConverter converter = new KesCancelledOrderConverter();
-        final List<KesOrder> kesOrderList = converter.convert(exCancelledOrderList);
-        System.out.println(kesOrderList);
     }
 
     private static void requiredAmount() {
