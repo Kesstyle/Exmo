@@ -4,9 +4,7 @@ import by.minsk.kes.exmo.model.domain.Pair;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 
 @Service
 public class PairConverter {
@@ -40,6 +38,27 @@ public class PairConverter {
       pairs.add(getFromString(strPair));
     }
     return pairs;
+  }
+
+  public Map<String, Set<String>> getMapFromString(final String pairStrings) {
+    final List<Pair> pairs = getListFromString(pairStrings);
+    if (pairs == null) {
+      return null;
+    }
+    final Map<String, Set<String>> pairsMap = new HashMap<>();
+    for (final Pair pair: pairs) {
+      final String first = pair.getFirstCurrency();
+      final String second = pair.getSecondCurrency();
+      if (pairsMap.containsKey(first)) {
+        final Set<String> secondCurrencies = pairsMap.get(first);
+        secondCurrencies.add(second);
+      } else {
+        final Set<String> secondCurrencies = new HashSet<>();
+        secondCurrencies.add(second);
+        pairsMap.put(first, secondCurrencies);
+      }
+    }
+    return pairsMap;
   }
 
   public String getStringFromList(final Collection<Pair> pairs) {

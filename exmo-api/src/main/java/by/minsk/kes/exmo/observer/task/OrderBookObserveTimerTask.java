@@ -28,13 +28,13 @@ public class OrderBookObserveTimerTask extends KesTimerTask {
     private static final String ORDER_PARAMETER_LIMIT = "limit";
     private static final String ORDER_PARAMETER_LIMIT_DEFAULT = "100";
 
-    @Value("${exmo.orders.analysis.target:USD}")
+    @Value("${exmo.currency.target:USD}")
     private String targetCurrency;
 
     @Value("${exmo.orders." + ORDER_PARAMETER_LIMIT + ":" + ORDER_PARAMETER_LIMIT_DEFAULT + "}")
     private int limit;
 
-    @Value("${exmo.orders." + ORDER_PARAMETER_PAIR + "}")
+    @Value("${exmo.pair}")
     private String tradePairs;
 
     @Autowired

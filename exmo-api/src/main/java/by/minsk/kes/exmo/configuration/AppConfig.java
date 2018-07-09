@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.*;
 
 @Configuration
-@ComponentScan(basePackages = "by.minsk")
+@ComponentScan(basePackages = "by.by.minsk")
 @Import(ExmoConfig.class)
 @EnableMBeanExport
 public class AppConfig {

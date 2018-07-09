@@ -5,7 +5,6 @@ dependencies {
 
 task moveProperties << {
     copyDir("$projectDir/build/resources/main/modules", project.ext.artifactPath + "/modules")
-    copyDir("$projectDir/build/resources/main/batch", project.ext.artifactPath)
 }
 
 moveProperties.dependsOn build

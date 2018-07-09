@@ -12,6 +12,10 @@ import org.apache.commons.codec.binary.Hex;
 import org.apache.commons.collections.MapUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.jmx.export.annotation.ManagedAttribute;
+import org.springframework.jmx.export.annotation.ManagedResource;
+import org.springframework.stereotype.Component;
 
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
@@ -22,6 +26,8 @@ import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
 import java.util.Map;
 
+@Component
+@ManagedResource(description = "Manages REST functionality")
 public class ExmoRestAdapter {
 
     private static final Logger LOG = LoggerFactory.getLogger("Adapter");
@@ -31,6 +37,9 @@ public class ExmoRestAdapter {
     private static long _nonce;
     private String _key;
     private String _secret;
+
+    @Value("${exmo.rest.adapter.log_responses:false}")
+    private boolean logResponses;
 
     public ExmoRestAdapter(String key, String secret) {
         _nonce = System.nanoTime();
@@ -98,17 +107,21 @@ public class ExmoRestAdapter {
 
         OkHttpClient client = new OkHttpClient();
         try {
-
+            final String url = "https://api.exmo.com/v1/" + method;
             RequestBody body = RequestBody.create(form, postData);
             Request request = new Request.Builder()
-                    .url("https://api.exmo.com/v1/" + method)
+                    .url(url)
                     .addHeader("Key", _key)
                     .addHeader("Sign", sign)
                     .post(body)
                     .build();
 
             Response response = client.newCall(request).execute();
-            return response.body().string();
+            final String responseJson = response.body().string();
+            if (logResponses) {
+                LOG.debug(String.format("%s result: %s", url, responseJson));
+            }
+            return responseJson;
         } catch (IOException e) {
             System.err.println("post fail: " + e.toString());
             return null;  // An error occured...
@@ -122,9 +135,12 @@ public class ExmoRestAdapter {
             addQueryParameters(urlBuilder, parameters);
             final String url = urlBuilder.build().toString();
             final Request request = new Request.Builder().url(url).build();
-            LOG.debug(String.format("Making a call to %s with parameters %s", url, parameters));
             final Response response = client.newCall(request).execute();
-            return response.body().string();
+            final String responseJson = response.body().string();
+            if (logResponses) {
+                LOG.debug(String.format("%s result: %s", url, responseJson));
+            }
+            return responseJson;
         } catch (IOException e) {
             System.err.println("get fail: " + e.toString());
             return null;  // An error occured...
@@ -138,5 +154,15 @@ public class ExmoRestAdapter {
         for (final Map.Entry<String, String> entry : parameters.entrySet()) {
             urlBuilder.addQueryParameter(entry.getKey(), entry.getValue());
         }
+    }
+
+    @ManagedAttribute
+    public boolean isLogResponses() {
+        return logResponses;
+    }
+
+    @ManagedAttribute
+    public void setLogResponses(boolean logResponses) {
+        this.logResponses = logResponses;
     }
 }

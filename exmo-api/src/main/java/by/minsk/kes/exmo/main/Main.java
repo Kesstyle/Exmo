@@ -69,11 +69,11 @@ public class Main {
 
     }
 
-    private static KesTimerTask getTradesTask() {
+    private static TradesObserveTimerTask getTradesTask() {
         return (TradesObserveTimerTask) context.getBean("tradesTask");
     }
 
-    private static KesTimerTask getOrdersTask() {
+    private static OrderBookObserveTimerTask getOrdersTask() {
         return (OrderBookObserveTimerTask) context.getBean("ordersTask");
     }
 

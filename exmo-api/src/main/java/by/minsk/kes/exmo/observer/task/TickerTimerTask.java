@@ -26,7 +26,7 @@ public class TickerTimerTask extends KesTimerTask {
 
     private static final Logger LOG = LoggerFactory.getLogger("Ticker");
 
-    @Value("${exmo.ticker.pairs}")
+    @Value("${exmo.pair}")
     private String pairs;
 
     @Autowired

@@ -26,7 +26,7 @@ public class TradesObserveTimerTask extends KesTimerTask {
 
     private static final String TRADES_PARAMETER_PAIR = "pair";
 
-    @Value("${exmo.trades." + TRADES_PARAMETER_PAIR + "}")
+    @Value("${exmo.pair}")
     private String tradePairs;
 
     @Autowired

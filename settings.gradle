@@ -1,4 +1,6 @@
 rootProject.name = 'exmo'
 include 'exmo-api'
 include 'exmo-env'
+include 'coinmarketcap-api'
+include 'coimarketcap-env'
 
