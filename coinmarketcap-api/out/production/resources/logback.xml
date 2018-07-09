@@ -1,0 +1,33 @@
+<configuration scan="true">
+
+    <jmxConfigurator/>
+
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <Pattern>[%-5p] [%d{yyyy:MM:dd HH:mm:ss:SSS}]: %m%n</Pattern>
+        </encoder>
+    </appender>
+
+    <appender name="CoinMarketAdapterAppender" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>D:/devei/INSTALL/logs/exmo/coin_market_calls.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>D:/devei/INSTALL/logs/exmo/coin_market_calls.%d{yyyy-MM-dd}.log</fileNamePattern>
+            <maxHistory>30</maxHistory>
+        </rollingPolicy>
+        <encoder>
+            <pattern>[%-5p] %d{yyyy:MM:dd HH:mm:ss:SSS} %m%n</pattern>
+        </encoder>
+    </appender>
+
+    <logger name="CoinMarketAdapter" level="DEBUG" additivity="false">
+        <appender-ref ref="CoinMarketAdapterAppender"/>
+    </logger>
+
+    <logger name="by.minsk" level="DEBUG" additivity="false">
+        <appender-ref ref="CommonAppender"/>
+    </logger>
+
+    <root level="DEBUG">
+        <appender-ref ref="STDOUT"/>
+    </root>
+</configuration>
