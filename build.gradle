@@ -19,4 +19,14 @@ subprojects {
 
 allprojects {
     project.ext.artifactPath = "C:/Users/PC/Desktop/Exmoapp"
+    project.ext.manifestPath = ""
+    task collectProjectDependencies << {
+        collectManifestPath()
+        println project.ext.manifestPath
+    }
+    configurations {
+        // configuration that holds jars to copy into lib
+        compile
+        tempproject
+    }
 }

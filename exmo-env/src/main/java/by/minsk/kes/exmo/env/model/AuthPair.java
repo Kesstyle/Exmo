@@ -1,4 +1,4 @@
-package by.minsk.model;
+package by.minsk.kes.exmo.env.model;
 
 public class AuthPair {
 

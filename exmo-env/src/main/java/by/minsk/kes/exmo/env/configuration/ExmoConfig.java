@@ -1,4 +1,4 @@
-package by.minsk.configuration;
+package by.minsk.kes.exmo.env.configuration;
 
 import org.springframework.context.annotation.*;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;

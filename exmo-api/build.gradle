@@ -1,9 +1,4 @@
 
-configurations {
-    // configuration that holds jars to copy into lib
-    compile
-}
-
     dependencies {
         compile project(':exmo-env')
         compile project(':coinmarketcap-api')
@@ -20,35 +15,18 @@ configurations {
         compile group: 'log4j', name: 'log4j', version: '1.2.17'
         compile group: 'ch.qos.logback', name: 'logback-classic', version: '1.2.3'
 
+        tempproject project(':coinmarketcap-env')
     }
 
-jar.dependsOn ':exmo-env:moveProperties'
+jar.dependsOn ':exmo-env:moveProperties', collectProjectDependencies
 
     jar.doFirst {
         manifest {
             def manifestFile = "${projectDir}/src/main/resources/META-INF/MANIFEST.MF"
             if ( new File( manifestFile ).exists() )
                 from ( manifestFile )
-            def requiredProject = ""
-            configurations.compile.getAllDependencies().withType(ProjectDependency).each {dep->
-                def dependantProjects = dep.getDependencyProject()
-                def projects = project(dependantProjects.path).libsDir.list().findAll{it.endsWith('.jar')}
-                projects.removeAll(projects.findAll{it.endsWith('test.jar')})
-                def depProjNames = projects.collect {
-                    "lib/" + it
-                }.join(' ')
-                requiredProject = depProjNames + ' '
-                logger.info 'Required Project: ' + requiredProject
-            }
-
-            def compileFiles = configurations.compile.files{ it instanceof ExternalDependency }.collect  {
-                File file = it
-                "lib/${file.name}"
-            }.join(' ')
-
-            def manifestPath = requiredProject + compileFiles
-            logger.info 'Manifest: '+ manifestPath
-            attributes 'Class-Path': manifestPath
+            println 'Manifest: ' + project.ext.manifestPath
+            attributes 'Class-Path': project.ext.manifestPath
             attributes 'Build-date': new Date();
             attributes 'Application-Version': project.version
         }
@@ -65,3 +43,36 @@ task copyLibs (type: Copy) {
 }
 
 deployToJboss.dependsOn copyLibs
+    collectProjectDependencies.dependsOn ':coinmarketcap-api:collectProjectDependencies'
+
+String collectManifestPath() {
+    def requiredProject = ""
+    requiredProject += collectDep(configurations.compile.getAllDependencies())
+
+    def compileFiles = configurations.compile.files{ it instanceof ExternalDependency }.collect  {
+        File file = it
+        "lib/${file.name}"
+    }.join(' ')
+
+    def manifestPath = requiredProject + compileFiles
+    project.ext.manifestPath += manifestPath
+    return project.ext.manifestPath
+}
+
+String collectDep(DependencySet deps) {
+    def requiredProject = ""
+    deps.withType(ProjectDependency).each {dep->
+        def dependantProjects = dep.getDependencyProject()
+        def projects = project(dependantProjects.path).libsDir.list().findAll{it.endsWith('.jar')}
+        project(dependantProjects.path).each {pr->
+            project.ext.manifestPath += pr.project.ext.manifestPath + ' '
+        }
+        projects.removeAll(projects.findAll{it.endsWith('test.jar')})
+        def depProjNames = projects.collect {
+            "lib/" + it
+        }.join(' ')
+        requiredProject = requiredProject + depProjNames + ' '
+        println 'Required Project: ' + requiredProject
+    }
+    requiredProject
+}

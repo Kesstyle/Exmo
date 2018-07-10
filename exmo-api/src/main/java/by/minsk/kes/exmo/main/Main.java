@@ -2,21 +2,11 @@ package by.minsk.kes.exmo.main;
 
 import by.minsk.kes.exmo.configuration.AppConfig;
 import by.minsk.kes.exmo.controller.delegate.ExmoDelegate;
-import by.minsk.kes.exmo.legacy.ExmoRestAdapter;
-import by.minsk.kes.exmo.model.api.ExCancelledOrder;
-import by.minsk.kes.exmo.model.domain.KesOrder;
 import by.minsk.kes.exmo.observer.task.*;
-import by.minsk.kes.exmo.transform.converter.KesCancelledOrderConverter;
-import by.minsk.kes.exmo.transform.parser.ExParser;
-import by.minsk.model.AuthPair;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
-import java.util.HashMap;
-import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
