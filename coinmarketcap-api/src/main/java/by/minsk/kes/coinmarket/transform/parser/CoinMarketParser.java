@@ -1,6 +1,7 @@
 package by.minsk.kes.coinmarket.transform.parser;
 
 import by.minsk.kes.coinmarket.model.CoinMarketTicker;
+import by.minsk.kes.coinmarket.model.CoinMarketTickerResponse;
 import by.minsk.kes.coinmarket.transform.parser.exception.CoinMarketException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -28,9 +29,23 @@ public class CoinMarketParser {
             throw new CoinMarketException(EMPTY_JSON_ERROR);
         }
         try {
-            final TypeReference<Map<String, CoinMarketTicker>> exUserOrdersRef = new TypeReference<Map<String, CoinMarketTicker>>() {
+            final TypeReference<Map<String, CoinMarketTicker>> ticker = new TypeReference<Map<String, CoinMarketTicker>>() {
             };
-            return mapper.readValue(json, exUserOrdersRef);
+            return mapper.readValue(json, ticker);
+        } catch (final IOException e) {
+            LOG.error(json);
+            throw new CoinMarketException(json);
+        }
+    }
+
+    public CoinMarketTickerResponse buildTickerDataFromJson(final String json) {
+        if (StringUtils.isBlank(json)) {
+            throw new CoinMarketException(EMPTY_JSON_ERROR);
+        }
+        try {
+            final TypeReference<CoinMarketTickerResponse> tickerResponse = new TypeReference<CoinMarketTickerResponse>() {
+            };
+            return mapper.readValue(json, tickerResponse);
         } catch (final IOException e) {
             LOG.error(json);
             throw new CoinMarketException(json);

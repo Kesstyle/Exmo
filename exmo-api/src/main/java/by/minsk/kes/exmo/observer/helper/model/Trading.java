@@ -4,6 +4,7 @@ import by.minsk.kes.exmo.model.domain.Pair;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 
 public class Trading implements Serializable {
 
@@ -11,6 +12,7 @@ public class Trading implements Serializable {
     private BigDecimal quantity = BigDecimal.ZERO;
     private BigDecimal amount = BigDecimal.ZERO;
     private BigDecimal avgPrice = BigDecimal.ZERO;
+    private BigDecimal valueToCompare;
 
     public BigDecimal getQuantity() {
         return quantity;
@@ -44,8 +46,29 @@ public class Trading implements Serializable {
         this.pair = pair;
     }
 
+    public BigDecimal getValueToCompare() {
+        return valueToCompare;
+    }
+
+    public void setValueToCompare(BigDecimal valueToCompare) {
+        this.valueToCompare = valueToCompare;
+    }
+
+    public BigDecimal percentDiff() {
+        if (valueToCompare == null) {
+            return null;
+        }
+        return valueToCompare.divide(avgPrice, 4, RoundingMode.HALF_UP).subtract(BigDecimal.ONE).multiply(BigDecimal.valueOf(100));
+    }
+
     @Override
     public String toString() {
-        return String.format("[%s] (%s %s totally for %s %s)", avgPrice, quantity, pair.getFirstCurrency(), amount, pair.getSecondCurrency());
+        final BigDecimal percent = percentDiff();
+        if (percent == null) {
+            return String.format("[%s] (%s %s totally for %s %s)", avgPrice, quantity, pair.getFirstCurrency(), amount, pair.getSecondCurrency());
+        } else {
+            return String.format("[%s <CoinMarket: %s (%s)>] (%s %s totally for %s %s)",
+                    avgPrice, valueToCompare, percent, quantity, pair.getFirstCurrency(), amount, pair.getSecondCurrency());
+        }
     }
 }

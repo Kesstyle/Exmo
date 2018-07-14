@@ -1,6 +1,7 @@
 package by.minsk.kes.exmo.observer.repository;
 
 import by.minsk.kes.exmo.model.domain.*;
+import by.minsk.kes.exmo.model.domain.coinmarket.KesCoinMarketTickerQuote;
 import by.minsk.kes.exmo.observer.helper.model.Trading;
 import org.apache.commons.collections.ListUtils;
 import org.apache.commons.collections.MapUtils;
@@ -20,6 +21,7 @@ public class InfoRepository {
     private volatile List<KesTradingStatistics> kesUserTradingStatistics;
     private volatile KesUserInfo kesUserInfo;
     private volatile Map<String, Trading> potentialSells;
+    private volatile Map<String, Map<String, KesCoinMarketTickerQuote>> coinMarketTickerInfo;
 
     public Map<String, KesUserOrder> getKesUserOrderMap() {
         return MapUtils.unmodifiableMap(kesUserOrderMap);
@@ -74,5 +76,13 @@ public class InfoRepository {
 
     public void setPotentialSells(final Map<String, Trading> potentialSells) {
         this.potentialSells = new ConcurrentHashMap<>(potentialSells);
+    }
+
+    public Map<String, Map<String, KesCoinMarketTickerQuote>> getCoinMarketTickerInfo() {
+        return MapUtils.unmodifiableMap(coinMarketTickerInfo);
+    }
+
+    public void setCoinMarketTickerInfo(Map<String, Map<String, KesCoinMarketTickerQuote>> coinMarketTickerInfo) {
+        this.coinMarketTickerInfo = new ConcurrentHashMap<>(coinMarketTickerInfo);
     }
 }

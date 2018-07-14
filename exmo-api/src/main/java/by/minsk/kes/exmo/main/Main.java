@@ -16,41 +16,44 @@ public class Main {
     private static final ApplicationContext context = new AnnotationConfigApplicationContext(AppConfig.class);
 
     private static ExmoDelegate delegate;
-    private static ScheduledExecutorService executor;
 
     public static void main(String[] args) {
         try {
             delegate = getExmoDelegate();
-            executor = getExecutor();
             userInfo();
             requiredAmount();
             trades();
             orders();
             ticker();
             potentialTrades();
+            coinMarketTicker();
         } catch (final Exception e) {
             e.printStackTrace();
         }
     }
 
     private static void ticker() {
-        executor.scheduleAtFixedRate(getTickerTask(), 0, 30, TimeUnit.SECONDS);
+        getExecutor().scheduleAtFixedRate(getTickerTask(), 0, 30, TimeUnit.SECONDS);
     }
 
     private static void userInfo() {
-        executor.scheduleAtFixedRate(getUserInfoTask(), 0, 30, TimeUnit.SECONDS);
+        getExecutor().scheduleAtFixedRate(getUserInfoTask(), 0, 30, TimeUnit.SECONDS);
     }
 
     private static void orders() {
-        executor.scheduleAtFixedRate(getOrdersTask(), 0, 30, TimeUnit.SECONDS);
+        getExecutor().scheduleAtFixedRate(getOrdersTask(), 0, 30, TimeUnit.SECONDS);
     }
 
     private static void trades() {
-        executor.scheduleAtFixedRate(getTradesTask(), 0, 30, TimeUnit.SECONDS);
+        getExecutor().scheduleAtFixedRate(getTradesTask(), 0, 30, TimeUnit.SECONDS);
     }
 
     private static void potentialTrades() {
-        executor.scheduleAtFixedRate(getPotentialTradingTask(), 5, 30, TimeUnit.SECONDS);
+        getExecutor().scheduleAtFixedRate(getPotentialTradingTask(), 5, 30, TimeUnit.SECONDS);
+    }
+
+    private static void coinMarketTicker() {
+        getExecutor().scheduleAtFixedRate(getCoinMarketTickerTask(), 0, 20, TimeUnit.SECONDS);
     }
 
     private static void requiredAmount() {
@@ -79,11 +82,15 @@ public class Main {
         return (PotentialTradingTimerTask) context.getBean("potentialTradingTask");
     }
 
+    private static CoinMarketTickerTimerTask getCoinMarketTickerTask() {
+        return (CoinMarketTickerTimerTask) context.getBean("coinMarketTickerTask");
+    }
+
     private static ExmoDelegate getExmoDelegate() {
         return (ExmoDelegate) context.getBean("exmoDelegate");
     }
 
     private static ScheduledExecutorService getExecutor() {
-        return Executors.newScheduledThreadPool(15);
+        return Executors.newScheduledThreadPool(1);
     }
 }

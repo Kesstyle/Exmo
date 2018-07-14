@@ -20,34 +20,3 @@ dependencies {
 }
 
 jar.dependsOn ':coinmarketcap-env:moveProperties'
-
-String collectManifestPath() {
-    def requiredProject = ""
-    requiredProject += collectDep(configurations.compile.getAllDependencies())
-    requiredProject += collectDep(configurations.tempproject.getAllDependencies())
-
-    def compileFiles = configurations.compile.files{ it instanceof ExternalDependency }.collect  {
-        File file = it
-        "lib/${file.name}"
-    }.join(' ')
-
-    def manifestPath = requiredProject + compileFiles
-    project.ext.manifestPath += manifestPath
-    return manifestPath
-}
-
-String collectDep(DependencySet deps) {
-    def requiredProject = ""
-    deps.withType(ProjectDependency).each {dep->
-        def dependantProjects = dep.getDependencyProject()
-        def tasksCollect = dependantProjects.tasks.findAll { task -> task.name.endsWith('collectProjectDependencies') }
-        def projects = project(dependantProjects.path).libsDir.list().findAll{it.endsWith('.jar')}
-        projects.removeAll(projects.findAll{it.endsWith('test.jar')})
-        def depProjNames = projects.collect {
-            "lib/" + it
-        }.join(' ')
-        requiredProject = requiredProject + depProjNames + ' '
-        println 'Required Project: ' + requiredProject
-    }
-    requiredProject
-}

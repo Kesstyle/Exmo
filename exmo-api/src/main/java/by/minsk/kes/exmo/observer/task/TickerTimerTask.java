@@ -21,13 +21,9 @@ import java.util.TreeMap;
 import java.util.stream.Collectors;
 
 @Service("tickerTask")
-@ManagedResource(description = "Manages ticker functionality")
 public class TickerTimerTask extends KesTimerTask {
 
     private static final Logger LOG = LoggerFactory.getLogger("Ticker");
-
-    @Value("${exmo.pair}")
-    private String pairs;
 
     @Autowired
     private KesTickerConverter kesTickerConverter;
@@ -49,12 +45,12 @@ public class TickerTimerTask extends KesTimerTask {
             return null;
         }
         final Map<String, KesTickerInfo> filteredResult = new TreeMap<>();
-        if (StringUtils.isEmpty(pairs)) {
+        if (StringUtils.isEmpty(getPairs())) {
             return filteredResult;
         }
         try {
             for (final Map.Entry<String, KesTickerInfo> entry : kesTickerMap.entrySet()) {
-                if (pairs.contains(entry.getKey())) {
+                if (getPairs().contains(entry.getKey())) {
                     filteredResult.put(entry.getKey(), entry.getValue());
                 }
             }
@@ -77,15 +73,5 @@ public class TickerTimerTask extends KesTimerTask {
         }
 
         LOG.debug("=============================================================================");
-    }
-
-    @ManagedAttribute
-    public String getPairs() {
-        return pairs;
-    }
-
-    @ManagedAttribute
-    public void setPairs(String pairs) {
-        this.pairs = pairs;
     }
 }

@@ -21,12 +21,51 @@ allprojects {
     project.ext.artifactPath = "C:/Users/PC/Desktop/Exmoapp"
     project.ext.manifestPath = ""
     task collectProjectDependencies << {
-        collectManifestPath()
+        project.ext.collectManifestPath()
         println project.ext.manifestPath
     }
     configurations {
         // configuration that holds jars to copy into lib
         compile
         tempproject
+    }
+
+    jar.dependsOn collectProjectDependencies
+}
+
+
+
+subprojects {
+
+    ext.collectManifestPath = { ->
+        def requiredProject = ""
+        requiredProject += collectDep(configurations.compile.getAllDependencies())
+
+        def compileFiles = configurations.compile.files { it instanceof ExternalDependency }.collect {
+            File file = it
+            "lib/${file.name}"
+        }.join(' ')
+
+        def manifestPath = requiredProject + compileFiles
+        project.ext.manifestPath += manifestPath
+        return project.ext.manifestPath
+    }
+
+    ext.collectDep = { DependencySet deps ->
+        def requiredProject = ""
+        deps.withType(ProjectDependency).each { dep ->
+            def dependantProjects = dep.getDependencyProject()
+            def projects = project(dependantProjects.path).libsDir.list().findAll { it.endsWith('.jar') }
+            project(dependantProjects.path).each { pr ->
+                project.ext.manifestPath += pr.project.ext.manifestPath + ' '
+            }
+            projects.removeAll(projects.findAll { it.endsWith('test.jar') })
+            def depProjNames = projects.collect {
+                "lib/" + it
+            }.join(' ')
+            requiredProject = requiredProject + depProjNames + ' '
+            println 'Required Project: ' + requiredProject
+        }
+        requiredProject
     }
 }

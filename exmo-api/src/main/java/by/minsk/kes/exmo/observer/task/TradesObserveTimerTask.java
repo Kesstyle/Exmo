@@ -19,15 +19,11 @@ import java.util.List;
 import java.util.Map;
 
 @Component("tradesTask")
-@ManagedResource(description = "Manages trades observation")
 public class TradesObserveTimerTask extends KesTimerTask {
 
     private static final Logger LOG = LoggerFactory.getLogger("Trades");
 
     private static final String TRADES_PARAMETER_PAIR = "pair";
-
-    @Value("${exmo.pair}")
-    private String tradePairs;
 
     @Autowired
     private TradesObserver tradesObserver;
@@ -49,17 +45,8 @@ public class TradesObserveTimerTask extends KesTimerTask {
 
     protected Map<String, String> getParamsMap() {
         final Map<String, String> params = new HashMap<>();
-        params.put(TRADES_PARAMETER_PAIR, getTradePairs());
+        params.put(TRADES_PARAMETER_PAIR, getPairs());
         return params;
     }
 
-    @ManagedAttribute
-    public String getTradePairs() {
-        return tradePairs;
-    }
-
-    @ManagedAttribute
-    public void setTradePairs(String tradePairs) {
-        this.tradePairs = tradePairs;
-    }
 }

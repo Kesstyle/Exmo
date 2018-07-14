@@ -1,28 +1,15 @@
-package by.minsk.kes.coinmarket.model;
-
-import com.fasterxml.jackson.annotation.JsonProperty;
+package by.minsk.kes.exmo.model.domain.coinmarket;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
 
-public class CoinMarketTickerQuote implements Serializable {
+public class KesCoinMarketTickerQuote implements Serializable {
 
-    @JsonProperty("price")
     private BigDecimal price;
-
-    @JsonProperty("volume_24h")
     private BigDecimal volume24h;
-
-    @JsonProperty("market_cap")
     private BigDecimal marketCap;
-
-    @JsonProperty("percent_change_1h")
     private BigDecimal percentChange1h;
-
-    @JsonProperty("percent_change_24h")
     private BigDecimal percentChange24h;
-
-    @JsonProperty("percent_change_7d")
     private BigDecimal percentChange7d;
 
     public BigDecimal getPrice() {

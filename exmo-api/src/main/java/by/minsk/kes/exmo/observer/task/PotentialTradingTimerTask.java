@@ -4,10 +4,12 @@ import by.minsk.kes.exmo.model.domain.KesUserAsk;
 import by.minsk.kes.exmo.model.domain.KesUserInfo;
 import by.minsk.kes.exmo.model.domain.KesUserOrder;
 import by.minsk.kes.exmo.model.domain.Pair;
+import by.minsk.kes.exmo.model.domain.coinmarket.KesCoinMarketTickerQuote;
 import by.minsk.kes.exmo.observer.helper.TradingDecisionHelper;
 import by.minsk.kes.exmo.observer.helper.model.Trading;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.MapUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,6 +42,7 @@ public class PotentialTradingTimerTask extends KesTimerTask {
 
     @Override
     public void run() {
+        System.out.println("Entering Potential Trading task");
         final KesUserInfo userInfo = repository.getKesUserInfo();
         if (userInfo == null) {
             return;
@@ -66,19 +69,45 @@ public class PotentialTradingTimerTask extends KesTimerTask {
         final Map<String, Trading> sorterMap = potentialSells.entrySet().stream().sorted(Map.Entry.<String, Trading>comparingByValue((v1, v2) ->
                 v2.getAmount().compareTo(v1.getAmount()))).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (v1, v2) -> v1, LinkedHashMap::new));
         repository.setPotentialSells(sorterMap);
-        logPotentialTrades(sorterMap);
+        logPotentialTrades(sorterMap, repository.getCoinMarketTickerInfo());
     }
 
-    private void logPotentialTrades(final Map<String, Trading> potentialSells) {
+    private void logPotentialTrades(final Map<String, Trading> potentialSells, final Map<String, Map<String, KesCoinMarketTickerQuote>> coinMarketTicker) {
         if (MapUtils.isEmpty(potentialSells)) {
             return;
         }
         LOG.debug("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
         for (final Map.Entry<String, Trading> sell : potentialSells.entrySet()) {
+            sell.getValue().setValueToCompare(getCoinMarketPrice(coinMarketTicker, sell.getKey()));
             LOG.debug(String.format("%s - %s", sell.getKey(), sell.getValue().toString()));
         }
         LOG.debug("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
     }
+
+    private BigDecimal getCoinMarketPrice(final Map<String, Map<String, KesCoinMarketTickerQuote>> coinMarketTicker, final String pairStr) {
+        if (coinMarketTicker == null) {
+            return null;
+        }
+        final Pair pair = pairConverter.getFromString(pairStr);
+        if (pair == null || StringUtils.isBlank(pair.getFirstCurrency()) || StringUtils.isBlank(pair.getSecondCurrency())) {
+            return null;
+        }
+        final String currency = pair.getFirstCurrency();
+        final String target = pair.getSecondCurrency();
+        if (!coinMarketTicker.containsKey(currency)) {
+            return null;
+        }
+        final Map<String, KesCoinMarketTickerQuote> coinMarketTickerForCurrency = coinMarketTicker.get(currency);
+        if (coinMarketTickerForCurrency == null || !coinMarketTickerForCurrency.containsKey(target)) {
+            return null;
+        }
+        final KesCoinMarketTickerQuote quote = coinMarketTickerForCurrency.get(target);
+        if (quote == null || quote.getPrice() == null) {
+            return null;
+        }
+        return quote.getPrice();
+    }
+
 
     private Map<String, BigDecimal> addOrders(final Map<String, BigDecimal> balances, final Map<String, BigDecimal> orders) {
         Map<String, BigDecimal> resultBalances = new HashMap<>();

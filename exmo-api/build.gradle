@@ -1,78 +1,42 @@
+dependencies {
+    compile project(':exmo-env')
+    compile project(':coinmarketcap-api')
+    compile group: 'commons-codec', name: 'commons-codec', version: '1.8'
+    compile group: 'com.squareup.okhttp3', name: 'okhttp', version: '3.1.2'
+    compile group: 'com.squareup.okio', name: 'okio', version: '1.6.0'
+    compile group: 'com.fasterxml.jackson.core', name: 'jackson-annotations', version: '2.6.0'
+    compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.6.0'
+    compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.7'
+    compile group: 'commons-collections', name: 'commons-collections', version: '3.2.1'
+    compile group: 'org.springframework', name: 'spring-web', version: '4.3.3.RELEASE'
+    compile group: 'org.springframework', name: 'spring-context', version: '4.3.3.RELEASE'
+    compile group: 'org.slf4j', name: 'slf4j-api', version: '1.7.25'
+    compile group: 'log4j', name: 'log4j', version: '1.2.17'
+    compile group: 'ch.qos.logback', name: 'logback-classic', version: '1.2.3'
+}
 
-    dependencies {
-        compile project(':exmo-env')
-        compile project(':coinmarketcap-api')
-        compile group: 'commons-codec', name: 'commons-codec', version: '1.8'
-        compile group: 'com.squareup.okhttp3', name: 'okhttp', version: '3.1.2'
-        compile group: 'com.squareup.okio', name: 'okio', version: '1.6.0'
-        compile group: 'com.fasterxml.jackson.core', name: 'jackson-annotations', version: '2.6.0'
-        compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.6.0'
-        compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.7'
-        compile group: 'commons-collections', name: 'commons-collections', version: '3.2.1'
-        compile group: 'org.springframework', name: 'spring-web', version: '4.3.3.RELEASE'
-        compile group: 'org.springframework', name: 'spring-context', version: '4.3.3.RELEASE'
-        compile group: 'org.slf4j', name: 'slf4j-api', version: '1.7.25'
-        compile group: 'log4j', name: 'log4j', version: '1.2.17'
-        compile group: 'ch.qos.logback', name: 'logback-classic', version: '1.2.3'
+jar.dependsOn ':exmo-env:moveProperties'
 
-        tempproject project(':coinmarketcap-env')
+jar.doFirst {
+    manifest {
+        def manifestFile = "${projectDir}/src/main/resources/META-INF/MANIFEST.MF"
+        if (new File(manifestFile).exists())
+            from(manifestFile)
+        println 'Manifest: ' + project.ext.manifestPath
+        attributes 'Class-Path': project.ext.manifestPath
+        attributes 'Build-date': new Date();
+        attributes 'Application-Version': project.version
     }
+}
 
-jar.dependsOn ':exmo-env:moveProperties', collectProjectDependencies
-
-    jar.doFirst {
-        manifest {
-            def manifestFile = "${projectDir}/src/main/resources/META-INF/MANIFEST.MF"
-            if ( new File( manifestFile ).exists() )
-                from ( manifestFile )
-            println 'Manifest: ' + project.ext.manifestPath
-            attributes 'Class-Path': project.ext.manifestPath
-            attributes 'Build-date': new Date();
-            attributes 'Application-Version': project.version
-        }
-    }
-
-task deployToJboss (type: Copy) {
+task deployToJboss(type: Copy) {
     from jar
     into project.ext.artifactPath
 }
 
-task copyLibs (type: Copy) {
+task copyLibs(type: Copy) {
     from configurations.compile
     into project.ext.artifactPath + "/lib"
 }
 
 deployToJboss.dependsOn copyLibs
-    collectProjectDependencies.dependsOn ':coinmarketcap-api:collectProjectDependencies'
-
-String collectManifestPath() {
-    def requiredProject = ""
-    requiredProject += collectDep(configurations.compile.getAllDependencies())
-
-    def compileFiles = configurations.compile.files{ it instanceof ExternalDependency }.collect  {
-        File file = it
-        "lib/${file.name}"
-    }.join(' ')
-
-    def manifestPath = requiredProject + compileFiles
-    project.ext.manifestPath += manifestPath
-    return project.ext.manifestPath
-}
-
-String collectDep(DependencySet deps) {
-    def requiredProject = ""
-    deps.withType(ProjectDependency).each {dep->
-        def dependantProjects = dep.getDependencyProject()
-        def projects = project(dependantProjects.path).libsDir.list().findAll{it.endsWith('.jar')}
-        project(dependantProjects.path).each {pr->
-            project.ext.manifestPath += pr.project.ext.manifestPath + ' '
-        }
-        projects.removeAll(projects.findAll{it.endsWith('test.jar')})
-        def depProjNames = projects.collect {
-            "lib/" + it
-        }.join(' ')
-        requiredProject = requiredProject + depProjNames + ' '
-        println 'Required Project: ' + requiredProject
-    }
-    requiredProject
-}

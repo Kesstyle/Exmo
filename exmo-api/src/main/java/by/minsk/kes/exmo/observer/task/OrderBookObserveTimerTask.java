@@ -1,12 +1,9 @@
 package by.minsk.kes.exmo.observer.task;
 
-import by.minsk.kes.exmo.legacy.ExmoRestAdapter;
 import by.minsk.kes.exmo.model.api.ExOrderBook;
 import by.minsk.kes.exmo.model.domain.KesUserOrder;
 import by.minsk.kes.exmo.model.domain.Pair;
 import by.minsk.kes.exmo.transform.converter.KesUserOrderConverter;
-import by.minsk.kes.exmo.transform.converter.PairConverter;
-import by.minsk.kes.exmo.transform.parser.ExParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,9 +31,6 @@ public class OrderBookObserveTimerTask extends KesTimerTask {
     @Value("${exmo.orders." + ORDER_PARAMETER_LIMIT + ":" + ORDER_PARAMETER_LIMIT_DEFAULT + "}")
     private int limit;
 
-    @Value("${exmo.pair}")
-    private String tradePairs;
-
     @Autowired
     private KesUserOrderConverter kesUserOrderConverter;
 
@@ -54,7 +48,7 @@ public class OrderBookObserveTimerTask extends KesTimerTask {
 
     protected Map<String, String> getParamsMap() {
         final Map<String, String> params = new HashMap<>();
-        params.put(ORDER_PARAMETER_PAIR, getTradePairs());
+        params.put(ORDER_PARAMETER_PAIR, getPairs());
         params.put(ORDER_PARAMETER_LIMIT, String.valueOf(getLimit()));
         return params;
     }
@@ -91,13 +85,4 @@ public class OrderBookObserveTimerTask extends KesTimerTask {
         this.limit = limit;
     }
 
-    @ManagedAttribute
-    public String getTradePairs() {
-        return tradePairs;
-    }
-
-    @ManagedAttribute
-    public void setTradePairs(String tradePairs) {
-        this.tradePairs = tradePairs;
-    }
 }
