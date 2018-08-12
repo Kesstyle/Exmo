@@ -4,6 +4,7 @@ import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.MapUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,6 +14,7 @@ import org.springframework.jmx.export.annotation.ManagedResource;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Map;
 
 @Component
@@ -26,10 +28,10 @@ public class CoinMarketCapRestAdapter {
     @Value("${coinmarket.rest.adapter.log_responses:false}")
     private boolean logResponses;
 
-    public final String get(final String baseUrl, final String operation, final Map<String, String> parameters) {
+    public final String get(final String baseUrl, final String operation, final List<String> pathVariables, final Map<String, String> parameters) {
         final OkHttpClient client = new OkHttpClient();
         try {
-            HttpUrl.Builder urlBuilder = HttpUrl.parse(baseUrl + operation + URL_SEPARATOR).newBuilder();
+            HttpUrl.Builder urlBuilder = HttpUrl.parse(baseUrl + operation + URL_SEPARATOR + getPathVariables(pathVariables)).newBuilder();
             addQueryParameters(urlBuilder, parameters);
             final String url = urlBuilder.build().toString();
             final Request request = new Request.Builder().url(url).build();
@@ -43,6 +45,17 @@ public class CoinMarketCapRestAdapter {
             System.err.println("get fail: " + e.toString());
             return null;  // An error occured...
         }
+    }
+
+    private final String getPathVariables(final List<String> pathVariables) {
+        if (CollectionUtils.isEmpty(pathVariables)) {
+            return "";
+        }
+        final StringBuilder stringBuilder = new StringBuilder();
+        for (final String pathVariable : pathVariables) {
+            stringBuilder.append(pathVariable + URL_SEPARATOR);
+        }
+        return stringBuilder.toString();
     }
 
     private final void addQueryParameters(final HttpUrl.Builder urlBuilder, final Map<String, String> parameters) {

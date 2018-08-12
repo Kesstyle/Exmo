@@ -20,7 +20,7 @@ public class ExParser {
     private static final Logger LOG = LoggerFactory.getLogger(ExParser.class);
 
     private static final String EMPTY_JSON_ERROR = "Empty json!";
-    
+
     @Autowired
     private ObjectMapper mapper;
 
@@ -76,6 +76,21 @@ public class ExParser {
             return mapper.readValue(json, exUserOrdersRef);
         } catch (final IOException e) {
             LOG.error(json);
+            throw new ExParserException(json);
+        }
+    }
+
+    public Map<String, List<ExHistoryTrade>> buildTradesHistoryFromJson(final String json) {
+        if (StringUtils.isBlank(json)) {
+            throw new ExParserException(EMPTY_JSON_ERROR);
+        }
+        try {
+            final TypeReference<Map<String, List<ExHistoryTrade>>> exUserOrdersRef = new TypeReference<Map<String, List<ExHistoryTrade>>>() {
+            };
+            return mapper.readValue(json, exUserOrdersRef);
+        } catch (final IOException e) {
+            LOG.error(json);
+            LOG.error(e.getMessage());
             throw new ExParserException(json);
         }
     }

@@ -25,16 +25,20 @@ import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicLong;
+
+import static java.lang.String.format;
 
 @Component
 @ManagedResource(description = "Manages REST functionality")
 public class ExmoRestAdapter {
 
     private static final Logger LOG = LoggerFactory.getLogger("Adapter");
+    private static final Logger LOG_NONCE = LoggerFactory.getLogger("NonceMonitoring");
 
     private static final String URL_SEPARATOR = "/";
 
-    private static long _nonce;
+    private static AtomicLong nonce;
     private String _key;
     private String _secret;
 
@@ -42,7 +46,7 @@ public class ExmoRestAdapter {
     private boolean logResponses;
 
     public ExmoRestAdapter(String key, String secret) {
-        _nonce = System.nanoTime();
+        nonce = new AtomicLong(System.nanoTime());
         _key = key;
         _secret = secret;
     }
@@ -56,7 +60,8 @@ public class ExmoRestAdapter {
             arguments = new HashMap<>();
         }
 
-        arguments.put("nonce", "" + ++_nonce);  // Add the dummy nonce.
+        final Long nonceToUse = nonce.incrementAndGet();
+        arguments.put("nonce", "" + nonceToUse);  // Add the dummy nonce.
 
         String postData = "";
 
@@ -119,8 +124,9 @@ public class ExmoRestAdapter {
             Response response = client.newCall(request).execute();
             final String responseJson = response.body().string();
             if (logResponses) {
-                LOG.debug(String.format("%s result: %s", url, responseJson));
+                LOG.debug(format("%s result: %s", url, responseJson));
             }
+            LOG_NONCE.debug(format("%s - %s", method, nonceToUse));
             return responseJson;
         } catch (IOException e) {
             System.err.println("post fail: " + e.toString());
@@ -138,7 +144,7 @@ public class ExmoRestAdapter {
             final Response response = client.newCall(request).execute();
             final String responseJson = response.body().string();
             if (logResponses) {
-                LOG.debug(String.format("%s result: %s", url, responseJson));
+                LOG.debug(format("%s result: %s", url, responseJson));
             }
             return responseJson;
         } catch (IOException e) {

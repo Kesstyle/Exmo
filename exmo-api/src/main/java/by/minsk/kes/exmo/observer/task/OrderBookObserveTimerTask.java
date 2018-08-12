@@ -35,7 +35,7 @@ public class OrderBookObserveTimerTask extends KesTimerTask {
     private KesUserOrderConverter kesUserOrderConverter;
 
     @Override
-    public void run() {
+    public void startTask() {
         try {
             final Map<String, ExOrderBook> ordersMap = delegate.getOrders(getParamsMap());
             final Map<String, KesUserOrder> kesUserOrderMap = kesUserOrderConverter.convertMap(ordersMap);

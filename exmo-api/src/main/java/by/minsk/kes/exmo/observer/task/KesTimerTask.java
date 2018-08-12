@@ -30,7 +30,17 @@ public abstract class KesTimerTask implements Runnable {
         exception.printStackTrace();
     }
 
+    public final void run() {
+        try {
+            startTask();
+        } catch (final Exception e) {
+            fallback(e);
+        }
+    }
+
     public String getPairs() {
         return resourceRepository.getPairs();
     }
+
+    public abstract void startTask();
 }

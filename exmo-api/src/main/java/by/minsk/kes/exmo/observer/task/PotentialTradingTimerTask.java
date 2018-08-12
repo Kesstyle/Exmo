@@ -41,8 +41,7 @@ public class PotentialTradingTimerTask extends KesTimerTask {
     private TradingDecisionHelper tradingHelper;
 
     @Override
-    public void run() {
-        System.out.println("Entering Potential Trading task");
+    public void startTask() {
         final KesUserInfo userInfo = repository.getKesUserInfo();
         if (userInfo == null) {
             return;
@@ -66,10 +65,22 @@ public class PotentialTradingTimerTask extends KesTimerTask {
                 potentialSells.put(pair.toString(), tradingHelper.getTrading(balances.get(pair.getFirstCurrency()), buyAsks, pair, BigDecimal.valueOf(percent)));
             }
         }
+
+        // Add coin market value
+        final Map<String, Map<String, KesCoinMarketTickerQuote>> coinMarketTicker = repository.getCoinMarketTickerInfo();
+        for (final Map.Entry<String, Trading> sell : potentialSells.entrySet()) {
+            sell.getValue().setValueToCompare(getCoinMarketPrice(coinMarketTicker, sell.getKey()));
+        }
+
         final Map<String, Trading> sorterMap = potentialSells.entrySet().stream().sorted(Map.Entry.<String, Trading>comparingByValue((v1, v2) ->
-                v2.getAmount().compareTo(v1.getAmount()))).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (v1, v2) -> v1, LinkedHashMap::new));
+                {
+                    if (v2.percentDiff() == null) return -1;
+                    if (v1.percentDiff() == null) return 1;
+                    return v1.percentDiff().compareTo(v2.percentDiff());
+                }
+        )).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (v1, v2) -> v1, LinkedHashMap::new));
         repository.setPotentialSells(sorterMap);
-        logPotentialTrades(sorterMap, repository.getCoinMarketTickerInfo());
+        logPotentialTrades(sorterMap, coinMarketTicker);
     }
 
     private void logPotentialTrades(final Map<String, Trading> potentialSells, final Map<String, Map<String, KesCoinMarketTickerQuote>> coinMarketTicker) {
@@ -77,9 +88,12 @@ public class PotentialTradingTimerTask extends KesTimerTask {
             return;
         }
         LOG.debug("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
-        for (final Map.Entry<String, Trading> sell : potentialSells.entrySet()) {
-            sell.getValue().setValueToCompare(getCoinMarketPrice(coinMarketTicker, sell.getKey()));
-            LOG.debug(String.format("%s - %s", sell.getKey(), sell.getValue().toString()));
+        try {
+            for (final Map.Entry<String, Trading> sell : potentialSells.entrySet()) {
+                LOG.debug(String.format("%s - %s", sell.getKey(), sell.getValue().toString()));
+            }
+        } catch (final Exception e) {
+            e.printStackTrace();
         }
         LOG.debug("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
     }

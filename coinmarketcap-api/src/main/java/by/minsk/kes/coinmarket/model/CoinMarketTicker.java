@@ -30,19 +30,7 @@ import java.util.Map;
  *             "last_updated": 1531509691
  *         },
  */
-public class CoinMarketTicker implements Serializable {
-
-    @JsonProperty("id")
-    private String id;
-
-    @JsonProperty("name")
-    private String name;
-
-    @JsonProperty("symbol")
-    private String code;
-
-    @JsonProperty("website_slug")
-    private String websiteSlug;
+public class CoinMarketTicker extends CoinMarketCryptoInfo implements Serializable {
 
     @JsonProperty("rank")
     private int rank;
@@ -61,38 +49,6 @@ public class CoinMarketTicker implements Serializable {
 
     @JsonProperty("last_updated")
     private Long lastUpdated;
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getCode() {
-        return code;
-    }
-
-    public void setCode(String code) {
-        this.code = code;
-    }
-
-    public String getWebsiteSlug() {
-        return websiteSlug;
-    }
-
-    public void setWebsiteSlug(String websiteSlug) {
-        this.websiteSlug = websiteSlug;
-    }
 
     public int getRank() {
         return rank;

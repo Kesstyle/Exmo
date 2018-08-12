@@ -19,7 +19,7 @@ public class UserInfoTimerTask extends KesTimerTask {
     }
 
     @Override
-    public void run() {
+    public void startTask() {
         final ExUserInfo exUserInfo = delegate.getUserInfo(getParamsMap());
         final KesUserInfo kesUserInfo = kesUserInfoConverter.convert(exUserInfo);
         repository.setKesUserInfo(kesUserInfo);

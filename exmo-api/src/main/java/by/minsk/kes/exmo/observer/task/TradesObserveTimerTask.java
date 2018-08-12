@@ -32,7 +32,7 @@ public class TradesObserveTimerTask extends KesTimerTask {
     private KesTradeConverter kesTradeConverter;
 
     @Override
-    public void run() {
+    public void startTask() {
         final Map<String, List<ExTrade>> exTrades = delegate.getTrades(getParamsMap());
         final Map<String, List<KesOrder>> kesOrders = kesTradeConverter.convertMapCollection(exTrades);
         repository.setKesUserTrades(kesOrders);

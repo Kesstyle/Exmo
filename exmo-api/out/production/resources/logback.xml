@@ -74,6 +74,28 @@
         </encoder>
     </appender>
 
+    <appender name="TradesHistoryAppender" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>D:/devei/INSTALL/logs/exmo/trades_history.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>D:/devei/INSTALL/logs/exmo/trades_history.%d{yyyy-MM-dd}.log</fileNamePattern>
+            <maxHistory>30</maxHistory>
+        </rollingPolicy>
+        <encoder>
+            <pattern>%d{HH:mm:ss:SSS} %m%n</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="NonceMonitoringAdapter" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>D:/devei/INSTALL/logs/exmo/nonce.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>D:/devei/INSTALL/logs/exmo/nonce.%d{yyyy-MM-dd}.log</fileNamePattern>
+            <maxHistory>30</maxHistory>
+        </rollingPolicy>
+        <encoder>
+            <pattern>%d{HH:mm:ss:SSS} %m%n</pattern>
+        </encoder>
+    </appender>
+
     <appender name="CommonAppender" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <file>D:/devei/INSTALL/logs/exmo/server.log</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
@@ -107,6 +129,14 @@
 
     <logger name="Trades" level="DEBUG" additivity="false">
         <appender-ref ref="TradesAppender"/>
+    </logger>
+
+    <logger name="TradesHistory" level="DEBUG" additivity="false">
+        <appender-ref ref="TradesHistoryAppender"/>
+    </logger>
+
+    <logger name="NonceMonitoring" level="DEBUG" additivity="false">
+        <appender-ref ref="NonceMonitoringAdapter"/>
     </logger>
 
     <logger name="by.minsk" level="DEBUG" additivity="false">

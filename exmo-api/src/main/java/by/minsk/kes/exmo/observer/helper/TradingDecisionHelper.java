@@ -37,7 +37,7 @@ public class TradingDecisionHelper {
         trading.setQuantity(quantityCollected);
         trading.setPair(pair);
         if (quantityCollected.doubleValue() == 0) {
-            trading.setAvgPrice(BigDecimal.ZERO);
+            trading.setAvgPrice(orders.get(0).getPrice());
         } else {
             trading.setAvgPrice(totalAmount.divide(quantityCollected, 10, RoundingMode.HALF_UP));
         }

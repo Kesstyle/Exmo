@@ -43,6 +43,11 @@ public class ExmoDelegate {
         return parser.buildTradeFromJson(json);
     }
 
+    public Map<String, List<ExHistoryTrade>> getUserTradesHistory(final Map<String, String> params) {
+        final String json = exmo.post(exmoOperationsRepository.getTradesHistoryOperation(), params);
+        return parser.buildTradesHistoryFromJson(json);
+    }
+
     public List<ExCancelledOrder> getCancelledOrders(final int limit, final int offset) {
         final String result = exmo.post(exmoOperationsRepository.getCancelledOrdersOperation(), new HashMap<String, String>() {{
             put("limit", String.valueOf(limit));

@@ -20,16 +20,21 @@ public class Main {
     public static void main(String[] args) {
         try {
             delegate = getExmoDelegate();
-            userInfo();
-            requiredAmount();
-            trades();
-            orders();
-            ticker();
-            potentialTrades();
-            coinMarketTicker();
+            regularMonitoring();
         } catch (final Exception e) {
             e.printStackTrace();
         }
+    }
+
+    private static void regularMonitoring() {
+        userInfo();
+        requiredAmount();
+        trades();
+        orders();
+        ticker();
+        potentialTrades();
+        coinMarketTicker();
+        userTradesHistory();
     }
 
     private static void ticker() {
@@ -37,15 +42,19 @@ public class Main {
     }
 
     private static void userInfo() {
-        getExecutor().scheduleAtFixedRate(getUserInfoTask(), 0, 30, TimeUnit.SECONDS);
+        getExecutor().scheduleAtFixedRate(getUserInfoTask(), 1, 30, TimeUnit.SECONDS);
     }
 
     private static void orders() {
-        getExecutor().scheduleAtFixedRate(getOrdersTask(), 0, 30, TimeUnit.SECONDS);
+        getExecutor().scheduleAtFixedRate(getOrdersTask(), 2, 30, TimeUnit.SECONDS);
     }
 
     private static void trades() {
-        getExecutor().scheduleAtFixedRate(getTradesTask(), 0, 30, TimeUnit.SECONDS);
+        getExecutor().scheduleAtFixedRate(getTradesTask(), 3, 30, TimeUnit.SECONDS);
+    }
+
+    private static void userTradesHistory() {
+        getExecutor().scheduleAtFixedRate(getUserTradesHistoryTask(), 4, 90, TimeUnit.SECONDS);
     }
 
     private static void potentialTrades() {
@@ -80,6 +89,10 @@ public class Main {
 
     private static PotentialTradingTimerTask getPotentialTradingTask() {
         return (PotentialTradingTimerTask) context.getBean("potentialTradingTask");
+    }
+
+    private static UserTradesHistoryTask getUserTradesHistoryTask() {
+        return (UserTradesHistoryTask) context.getBean("userTradesHistoryTask");
     }
 
     private static CoinMarketTickerTimerTask getCoinMarketTickerTask() {

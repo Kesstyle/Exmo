@@ -1,6 +1,6 @@
 package by.minsk.kes.exmo.observer.task;
 
-import by.minsk.kes.coinmarket.controller.delegate.CoinMarketDelegate;
+import by.minsk.kes.coinmarket.delegate.CoinMarketDelegate;
 import by.minsk.kes.coinmarket.model.CoinMarketTicker;
 import by.minsk.kes.exmo.model.domain.Pair;
 import by.minsk.kes.exmo.model.domain.coinmarket.KesCoinMarketTicker;
@@ -22,9 +22,9 @@ public class CoinMarketTickerTimerTask extends KesTimerTask {
     private KesCoinMarketTickerConverter kesCoinMarketTickerConverter;
 
     @Override
-    public void run() {
+    public void startTask() {
         try {
-            final Map<String, CoinMarketTicker> coinMarketTickerMap = coinMarketDelegate.getCoinMarketTicker();
+            final Map<String, CoinMarketTicker> coinMarketTickerMap = coinMarketDelegate.getCoinMarketTicker(pairConverter.getFirstCurrencies(getPairs()));
             final Map<String, KesCoinMarketTicker> kesCoinMarketTickerMap = kesCoinMarketTickerConverter.convertMap(coinMarketTickerMap);
             final Map<String, Map<String, KesCoinMarketTickerQuote>> coinMarketPrices = filterAndAlign(kesCoinMarketTickerMap);
             repository.setCoinMarketTickerInfo(coinMarketPrices);

@@ -55,7 +55,7 @@ public class Trading implements Serializable {
     }
 
     public BigDecimal percentDiff() {
-        if (valueToCompare == null) {
+        if (valueToCompare == null || avgPrice.doubleValue() == 0.0d) {
             return null;
         }
         return valueToCompare.divide(avgPrice, 4, RoundingMode.HALF_UP).subtract(BigDecimal.ONE).multiply(BigDecimal.valueOf(100));
@@ -65,10 +65,11 @@ public class Trading implements Serializable {
     public String toString() {
         final BigDecimal percent = percentDiff();
         if (percent == null) {
-            return String.format("[%s] (%s %s totally for %s %s)", avgPrice, quantity, pair.getFirstCurrency(), amount, pair.getSecondCurrency());
+            return String.format("[%s <CoinMarket: --- (---%%)>] (%s %s totally for %s %s)", avgPrice, quantity, pair.getFirstCurrency(), amount, pair.getSecondCurrency());
         } else {
-            return String.format("[%s <CoinMarket: %s (%s)>] (%s %s totally for %s %s)",
-                    avgPrice, valueToCompare, percent, quantity, pair.getFirstCurrency(), amount, pair.getSecondCurrency());
+            final String sign = percent.doubleValue() > 0? "+" : "-";
+            return String.format("[%s <CoinMarket: %s (%s%s%%)>] (%s %s totally for %s %s)",
+                    avgPrice, valueToCompare, sign, percent.abs(), quantity, pair.getFirstCurrency(), amount, pair.getSecondCurrency());
         }
     }
 }

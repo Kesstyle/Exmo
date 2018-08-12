@@ -7,16 +7,16 @@ import java.io.Serializable;
 import java.util.Map;
 
 @JsonIgnoreProperties("metadata")
-public class CoinMarketTickerResponse implements Serializable {
+public class CoinMarketSpecificTickerResponse implements Serializable {
 
     @JsonProperty("data")
-    private Map<String, CoinMarketTicker> ticker;
+    private CoinMarketTicker ticker;
 
-    public Map<String, CoinMarketTicker> getTicker() {
+    public CoinMarketTicker getTicker() {
         return ticker;
     }
 
-    public void setTicker(Map<String, CoinMarketTicker> ticker) {
+    public void setTicker(CoinMarketTicker ticker) {
         this.ticker = ticker;
     }
 }

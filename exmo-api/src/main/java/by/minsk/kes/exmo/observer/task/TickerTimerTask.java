@@ -29,7 +29,7 @@ public class TickerTimerTask extends KesTimerTask {
     private KesTickerConverter kesTickerConverter;
 
     @Override
-    public void run() {
+    public void startTask() {
         final Map<String, ExTicker> exTickerMap = delegate.getTicker(getParamsMap());
         final Map<String, KesTickerInfo> kesTickerMap = filter(kesTickerConverter.convertMap(exTickerMap));
         repository.setKesTickerMap(kesTickerMap);

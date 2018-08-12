@@ -1,7 +1,6 @@
 package by.minsk.kes.coinmarket.transform.parser;
 
-import by.minsk.kes.coinmarket.model.CoinMarketTicker;
-import by.minsk.kes.coinmarket.model.CoinMarketTickerResponse;
+import by.minsk.kes.coinmarket.model.*;
 import by.minsk.kes.coinmarket.transform.parser.exception.CoinMarketException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -52,4 +51,31 @@ public class CoinMarketParser {
         }
     }
 
+    public CoinMarketSpecificTickerResponse buildSpecificTickerDataFromJson(final String json) {
+        if (StringUtils.isBlank(json)) {
+            throw new CoinMarketException(EMPTY_JSON_ERROR);
+        }
+        try {
+            final TypeReference<CoinMarketSpecificTickerResponse> tickerResponse = new TypeReference<CoinMarketSpecificTickerResponse>() {
+            };
+            return mapper.readValue(json, tickerResponse);
+        } catch (final IOException e) {
+            LOG.error(json);
+            throw new CoinMarketException(json);
+        }
+    }
+
+    public CoinMarketListingsResponse buildListingsResponseFromJson(final String json) {
+        if (StringUtils.isBlank(json)) {
+            throw new CoinMarketException(EMPTY_JSON_ERROR);
+        }
+        try {
+            final TypeReference<CoinMarketListingsResponse> tickerResponse = new TypeReference<CoinMarketListingsResponse>() {
+            };
+            return mapper.readValue(json, tickerResponse);
+        } catch (final IOException e) {
+            LOG.error(json);
+            throw new CoinMarketException(json);
+        }
+    }
 }

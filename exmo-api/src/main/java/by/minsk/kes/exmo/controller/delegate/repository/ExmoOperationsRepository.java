@@ -24,6 +24,9 @@ public class ExmoOperationsRepository {
     @Value("${exmo.user.required.amount.operation}")
     private String requiredAmountOperation;
 
+    @Value("${exmo.user.trades.history.operation}")
+    private String tradesHistoryOperation;
+
     public String getCancelledOrdersOperation() {
         return cancelledOrdersOperation;
     }
@@ -46,5 +49,9 @@ public class ExmoOperationsRepository {
 
     public String getRequiredAmountOperation() {
         return requiredAmountOperation;
+    }
+
+    public String getTradesHistoryOperation() {
+        return tradesHistoryOperation;
     }
 }
