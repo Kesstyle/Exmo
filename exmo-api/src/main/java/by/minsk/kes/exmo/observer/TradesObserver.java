@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 public class TradesObserver {
@@ -71,13 +72,9 @@ public class TradesObserver {
         if (orders == null) {
             return null;
         }
-        final List<KesOrder> result = new ArrayList<>();
-        for (final KesOrder order : orders) {
-            if (order.getDate().before(end) && order.getDate().after(start)) {
-                result.add(order);
-            }
-        }
-        return result;
+        return orders.stream()
+                .filter(order -> order.getDate().before(end) && order.getDate().after(start))
+                .collect(Collectors.toList());
     }
 
 }

@@ -44,34 +44,27 @@ public class TickerTimerTask extends KesTimerTask {
         if (kesTickerMap == null) {
             return null;
         }
-        final Map<String, KesTickerInfo> filteredResult = new TreeMap<>();
         if (StringUtils.isEmpty(getPairs())) {
-            return filteredResult;
+            return new TreeMap<>();
         }
-        try {
-            for (final Map.Entry<String, KesTickerInfo> entry : kesTickerMap.entrySet()) {
-                if (getPairs().contains(entry.getKey())) {
-                    filteredResult.put(entry.getKey(), entry.getValue());
-                }
-            }
-        } finally {
-            return filteredResult.entrySet().stream().sorted(Map.Entry.<String, KesTickerInfo>comparingByValue(
-                    (v1, v2) -> v2.getVolatilePercent().compareTo(v1.getVolatilePercent())))
-                    .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (v1, v2) -> v1, LinkedHashMap::new));
-        }
+        return kesTickerMap.entrySet().stream()
+                .filter(entry -> getPairs().contains(entry.getKey()))
+                .sorted(Map.Entry.<String, KesTickerInfo>comparingByValue(
+                        (v1, v2) -> v2.getVolatilePercent().compareTo(v1.getVolatilePercent())))
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (v1, v2) -> v1, LinkedHashMap::new));
+
     }
 
     private void printTickers(final Map<String, KesTickerInfo> kesTickerMap) {
         LOG.debug("=============================================================================");
-        for (final Map.Entry<String, KesTickerInfo> entry : kesTickerMap.entrySet()) {
+        kesTickerMap.entrySet().stream().forEach(entry -> {
             final KesTickerInfo ticker = entry.getValue();
             final Pair pair = pairConverter.getFromString(entry.getKey());
             LOG.debug(String.format("%s, %s ==> %s %s - %s %s (High: %s %s, Low: %s %s). Volatility = %s %%",
                     new SimpleDateFormat("HH:mm:ss:SSS").format(ticker.getLastUpdated()), pair.toString(),
                     ticker.getBuyPrice(), pair.getSecondCurrency(), ticker.getSellPrice(), pair.getSecondCurrency(), ticker.getHighPrice(),
                     pair.getSecondCurrency(), ticker.getLowPrice(), pair.getSecondCurrency(), ticker.getVolatilePercent().multiply(BigDecimal.valueOf(100))));
-        }
-
+        });
         LOG.debug("=============================================================================");
     }
 }

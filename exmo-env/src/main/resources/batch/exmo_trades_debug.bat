@@ -1,1 +1,1 @@
-java -jar "-agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=8983" exmo-api.jar
+java -jar "-agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=8983" exmo-api-1.1-SNAPSHOT.jar

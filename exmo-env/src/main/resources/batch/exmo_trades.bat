@@ -1,1 +1,1 @@
-java -jar exmo-api.jar
+java -jar exmo-api-1.1-SNAPSHOT.jar

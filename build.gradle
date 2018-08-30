@@ -1,3 +1,13 @@
+//buildscript {
+//    repositories {
+//        mavenLocal()
+//        mavenCentral()
+//    }
+//    dependencies {
+//        classpath "by.groovy:pluginsPrinter:1.0"
+//    }
+//}
+
 plugins {
     id 'java'
     id 'idea'
@@ -37,6 +47,45 @@ allprojects {
 
 subprojects {
 
+    apply plugin: 'maven-publish'
+
+    publishing {
+
+        publications {
+            impl(MavenPublication) {
+                groupId group
+                artifactId project.name
+                artifact jar
+
+                // Include all dependencies in the pom file when publishing artefacts
+                pom.withXml {
+                    def dependenciesNode = asNode().appendNode( "dependencies")
+                    project.configurations.compile { conf ->
+                        conf.dependencies.each { dep ->
+                            if (dep.group != null) {
+                                def dependencyNode = dependenciesNode.appendNode("dependency")
+                                dependencyNode.appendNode("groupId", "${dep.group}")
+                                dependencyNode.appendNode("artifactId", "${dep.name}")
+                                dependencyNode.appendNode("version", "${dep.version}")
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        repositories {
+            maven {
+                url "$nexusServer/repository/maven-snapshots/"
+                credentials {
+                    username "$nexusUser"
+                    password "$nexusPassword"
+                }
+            }
+        }
+    }
+
+    apply plugin: PluginPrintPlugin
     ext.collectManifestPath = { ->
         def requiredProject = ""
         requiredProject += collectDep(configurations.compile.getAllDependencies())

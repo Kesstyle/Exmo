@@ -19,6 +19,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.stream.Collectors;
 
 import static java.lang.String.format;
 
@@ -65,19 +66,20 @@ public class UserTradesHistoryTask extends KesTimerTask {
         if (MapUtils.isEmpty(potentialTradings)) {
             return filteredHistory;
         }
-        for (final Entry<String, List<KesUserTradesHistory>> historyEntry : kesUserTradesHistories.entrySet()) {
-            final String pair = historyEntry.getKey();
-            if (potentialTradings.containsKey(pair)) {
-                final Trading trading = potentialTradings.get(pair);
-                final BigDecimal amount = trading.getAmount();
-                if (amount.compareTo(BigDecimal.valueOf(minimumBtcConsider)) > 0) {
-                    filteredHistory.put(historyEntry.getKey(), historyEntry.getValue());
-                }
-                continue;
-            }
-            filteredHistory.put(historyEntry.getKey(), historyEntry.getValue());
-        }
-        return filteredHistory;
+        return kesUserTradesHistories.entrySet().stream()
+                .filter(entry -> {
+                    final String pair = entry.getKey();
+                    if (potentialTradings.containsKey(pair)) {
+                        final Trading trading = potentialTradings.get(pair);
+                        final BigDecimal amount = trading.getAmount();
+                        if (amount.compareTo(BigDecimal.valueOf(minimumBtcConsider)) > 0) {
+                            return true;
+                        }
+                        return false;
+                    }
+                    return true;
+                })
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (v1, v2) -> v1));
     }
 
     private void logTradesHistory(final Map<String, List<KesUserTradesHistory>> tradesMap) {
@@ -87,22 +89,22 @@ public class UserTradesHistoryTask extends KesTimerTask {
         final Map<String, Trading> potentialTradings = repository.getPotentialSells();
         LOG.debug("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
         try {
-            for (final Entry<String, List<KesUserTradesHistory>> tradesEntry : tradesMap.entrySet()) {
-                final String pair = tradesEntry.getKey();
+            tradesMap.entrySet().stream().forEach(entry -> {
+                final String pair = entry.getKey();
                 final Pair pairObj = pairConverter.getFromString(pair);
                 final Trading trading = potentialTradings.get(pair);
                 LOG.debug(format("#########  %s (%s %s currently, that is %s %s ) #########", pair, trading.getQuantity(), pairObj.getFirstCurrency(),
                         trading.getAmount(), pairObj.getSecondCurrency()));
                 int index = 0;
-                for (final KesUserTradesHistory trade : tradesEntry.getValue()) {
+                for (final KesUserTradesHistory trade : entry.getValue()) {
                     if (index++ >= getMaximumRecords()) {
-                        LOG.debug(format("And others.... (%s records totally)", tradesEntry.getValue().size()));
+                        LOG.debug(format("And others.... (%s records totally)", entry.getValue().size()));
                         break;
                     }
                     LOG.debug(format("(!! %s !!) %s %s - %s %s for %s %s", trade.getOrderType(), trade.getPrice(), pairObj.getSecondCurrency(), trade.getQuantity(),
                             pairObj.getFirstCurrency(), trade.getTotalAmount(), pairObj.getSecondCurrency()));
                 }
-            }
+            });
         } catch (final Exception e) {
             e.printStackTrace();
         }

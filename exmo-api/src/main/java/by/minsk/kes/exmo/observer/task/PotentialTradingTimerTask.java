@@ -46,31 +46,29 @@ public class PotentialTradingTimerTask extends KesTimerTask {
         if (userInfo == null) {
             return;
         }
-        Map<String, BigDecimal> balances = userInfo.getBalances();
+        final Map<String, BigDecimal> balances = userInfo.getBalances();
         if (MapUtils.isEmpty(balances)) {
             return;
         }
         final Map<String, BigDecimal> orders = userInfo.getOrders();
-        balances = addOrders(balances, orders);
+        final Map<String, BigDecimal> orderedBalances = addOrders(balances, orders);
 
         final Map<String, KesUserOrder> userOrders = repository.getKesUserOrderMap();
         if (MapUtils.isEmpty(userOrders)) {
             return;
         }
         final Map<String, Trading> potentialSells = new HashMap<>();
-        for (final Map.Entry<String, KesUserOrder> entry : userOrders.entrySet()) {
+        userOrders.entrySet().stream().forEach(entry -> {
             final Pair pair = pairConverter.getFromString(entry.getKey());
             final List<KesUserAsk> buyAsks = entry.getValue().getBuyOrders();
             if (CollectionUtils.isNotEmpty(buyAsks)) {
-                potentialSells.put(pair.toString(), tradingHelper.getTrading(balances.get(pair.getFirstCurrency()), buyAsks, pair, BigDecimal.valueOf(percent)));
+                potentialSells.put(pair.toString(), tradingHelper.getTrading(orderedBalances.get(pair.getFirstCurrency()), buyAsks, pair, BigDecimal.valueOf(percent)));
             }
-        }
+        });
 
         // Add coin market value
         final Map<String, Map<String, KesCoinMarketTickerQuote>> coinMarketTicker = repository.getCoinMarketTickerInfo();
-        for (final Map.Entry<String, Trading> sell : potentialSells.entrySet()) {
-            sell.getValue().setValueToCompare(getCoinMarketPrice(coinMarketTicker, sell.getKey()));
-        }
+        potentialSells.entrySet().stream().forEach(sell -> sell.getValue().setValueToCompare(getCoinMarketPrice(coinMarketTicker, sell.getKey())));
 
         final Map<String, Trading> sorterMap = potentialSells.entrySet().stream().sorted(Map.Entry.<String, Trading>comparingByValue((v1, v2) ->
                 {
@@ -89,9 +87,7 @@ public class PotentialTradingTimerTask extends KesTimerTask {
         }
         LOG.debug("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
         try {
-            for (final Map.Entry<String, Trading> sell : potentialSells.entrySet()) {
-                LOG.debug(String.format("%s - %s", sell.getKey(), sell.getValue().toString()));
-            }
+            potentialSells.entrySet().stream().forEach(sell -> LOG.debug(String.format("%s - %s", sell.getKey(), sell.getValue().toString())));
         } catch (final Exception e) {
             e.printStackTrace();
         }
@@ -126,14 +122,14 @@ public class PotentialTradingTimerTask extends KesTimerTask {
     private Map<String, BigDecimal> addOrders(final Map<String, BigDecimal> balances, final Map<String, BigDecimal> orders) {
         Map<String, BigDecimal> resultBalances = new HashMap<>();
         if (countOrders && MapUtils.isNotEmpty(orders)) {
-            for (final String key : balances.keySet()) {
+            balances.keySet().stream().forEach(key -> {
                 if (orders.containsKey(key)) {
                     BigDecimal balance = balances.get(key);
                     resultBalances.put(key, balance.add(orders.get(key)));
                 }
-            }
+            });
         } else {
-            resultBalances = balances;
+            return balances;
         }
         return resultBalances;
     }

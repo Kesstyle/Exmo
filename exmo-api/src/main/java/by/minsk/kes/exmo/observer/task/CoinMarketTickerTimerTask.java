@@ -11,6 +11,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.*;
 import java.util.Map.Entry;
+import java.util.stream.Collectors;
 
 @Component("coinMarketTickerTask")
 public class CoinMarketTickerTimerTask extends KesTimerTask {
@@ -38,13 +39,13 @@ public class CoinMarketTickerTimerTask extends KesTimerTask {
             final List<Pair> allowedPairs = pairConverter.getListFromString(resourceRepository.getPairs());
             final Set<String> currencies = getExmoCurrenciesToTrade(allowedPairs);
             final Map<String, Map<String, KesCoinMarketTickerQuote>> resultMap = new HashMap<>();
-            for (final Entry<String, KesCoinMarketTicker> entry : kesCoinMarketTickerMap.entrySet()) {
+            kesCoinMarketTickerMap.entrySet().stream().forEach(entry -> {
                 final KesCoinMarketTicker ticker = entry.getValue();
                 final String code = ticker.getCode();
                 if (currencies.contains(code)) {
                     resultMap.put(code, ticker.getQuotes());
                 }
-            }
+            });
             return resultMap;
         }
         return null;
@@ -54,10 +55,6 @@ public class CoinMarketTickerTimerTask extends KesTimerTask {
         if (allowedPairs == null) {
             return null;
         }
-        final Set<String> currencies = new HashSet<>();
-        for (final Pair pair : allowedPairs) {
-            currencies.add(pair.getFirstCurrency());
-        }
-        return currencies;
+        return allowedPairs.stream().map(Pair::getFirstCurrency).collect(Collectors.toSet());
     }
 }

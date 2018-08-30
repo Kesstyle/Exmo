@@ -55,13 +55,13 @@ public class OrderBookObserveTimerTask extends KesTimerTask {
 
     private void logOrders(final Map<String, KesUserOrder> kesUserOrderMap) {
         LOG.debug("=============================================================================");
-        for (final Map.Entry<String, KesUserOrder> entry : kesUserOrderMap.entrySet()) {
+        kesUserOrderMap.entrySet().stream().forEach(entry -> {
             final KesUserOrder userOrder = entry.getValue();
             final Pair pair = pairConverter.getFromString(entry.getKey());
             LOG.debug(String.format(" [%s] ==> %s %s (%s %s) - %s %s (%s %s)", pair.toString(), userOrder.getBuyTopPrice(), pair.getSecondCurrency(),
                     userOrder.getBuyOrders().get(0).getQuantity(), pair.getFirstCurrency(),
                     userOrder.getSellTopPrice(), pair.getSecondCurrency(), userOrder.getSellOrders().get(0).getQuantity(), pair.getFirstCurrency()));
-        }
+        });
         LOG.debug("=============================================================================");
     }
 
