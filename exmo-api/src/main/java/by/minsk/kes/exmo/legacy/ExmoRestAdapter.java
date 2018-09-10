@@ -9,13 +9,17 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 import org.apache.commons.codec.binary.Hex;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.MapUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.jmx.export.annotation.ManagedAttribute;
 import org.springframework.jmx.export.annotation.ManagedResource;
 import org.springframework.stereotype.Component;
+
+import java.util.function.Predicate;
 
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
@@ -28,6 +32,7 @@ import java.util.Map;
 import java.util.concurrent.atomic.AtomicLong;
 
 import static java.lang.String.format;
+import static org.apache.commons.lang3.StringUtils.EMPTY;
 
 @Component
 @ManagedResource(description = "Manages REST functionality")
@@ -63,16 +68,10 @@ public class ExmoRestAdapter {
         final Long nonceToUse = nonce.incrementAndGet();
         arguments.put("nonce", "" + nonceToUse);  // Add the dummy nonce.
 
-        String postData = "";
-
-        for (Map.Entry<String, String> stringStringEntry : arguments.entrySet()) {
-            Map.Entry argument = (Map.Entry) stringStringEntry;
-
-            if (postData.length() > 0) {
-                postData += "&";
-            }
-            postData += argument.getKey() + "=" + argument.getValue();
-        }
+        final Predicate<String> isNotEmptyPredicate = StringUtils::isNotEmpty;
+        final String postData = arguments.entrySet().stream()
+                .map(entry -> entry.getKey() + "=" + entry.getValue())
+                .reduce(EMPTY, (s1, s2) -> s1 + (isNotEmptyPredicate.test(s1) ? "&" : EMPTY) + s2);
 
         // Create a new secret key
         try {
@@ -157,9 +156,7 @@ public class ExmoRestAdapter {
         if (MapUtils.isEmpty(parameters)) {
             return;
         }
-        for (final Map.Entry<String, String> entry : parameters.entrySet()) {
-            urlBuilder.addQueryParameter(entry.getKey(), entry.getValue());
-        }
+        parameters.entrySet().stream().forEach(entry -> urlBuilder.addQueryParameter(entry.getKey(), entry.getValue()));
     }
 
     @ManagedAttribute

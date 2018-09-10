@@ -1,1 +1,1 @@
-java -jar "-agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=8983" exmo-api-1.1-SNAPSHOT.jar
+java -jar -Xms128m -Xmx256m -XX:MaxMetaspaceSize=128m -XX:CompressedClassSpaceSize=200m "-agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=8983" exmo-api-1.1-SNAPSHOT.jar

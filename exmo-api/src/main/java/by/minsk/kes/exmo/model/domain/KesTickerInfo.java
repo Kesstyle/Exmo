@@ -90,6 +90,9 @@ public class KesTickerInfo implements Serializable {
     }
 
     public BigDecimal getVolatilePercent() {
+        if (lowPrice == null || lowPrice.doubleValue() == 0.0d) {
+            return BigDecimal.ZERO;
+        }
         return highPrice.divide(lowPrice, 4, RoundingMode.HALF_DOWN).subtract(BigDecimal.ONE);
     }
 

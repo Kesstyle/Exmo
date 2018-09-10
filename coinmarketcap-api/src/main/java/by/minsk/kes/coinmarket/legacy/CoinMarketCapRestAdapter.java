@@ -6,6 +6,7 @@ import okhttp3.Request;
 import okhttp3.Response;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.MapUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -16,6 +17,8 @@ import org.springframework.stereotype.Component;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
+
+import static org.apache.commons.lang3.StringUtils.EMPTY;
 
 @Component
 @ManagedResource(description = "Manages Coin Market Adapter Functionality")
@@ -51,11 +54,7 @@ public class CoinMarketCapRestAdapter {
         if (CollectionUtils.isEmpty(pathVariables)) {
             return "";
         }
-        final StringBuilder stringBuilder = new StringBuilder();
-        for (final String pathVariable : pathVariables) {
-            stringBuilder.append(pathVariable + URL_SEPARATOR);
-        }
-        return stringBuilder.toString();
+        return pathVariables.stream().reduce(EMPTY, (s1, s2) -> s1 + s2 + URL_SEPARATOR);
     }
 
     private final void addQueryParameters(final HttpUrl.Builder urlBuilder, final Map<String, String> parameters) {
