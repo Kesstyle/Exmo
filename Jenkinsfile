@@ -1,6 +1,6 @@
 stage("Preparation") {
     node {
-        git url: 'https://github.com/Kesstyle/Exmo.git', branch: env.BRANCH_NAME
+        checkout scm
         gradleHome = tool "Gradle 4"
     }
 }
