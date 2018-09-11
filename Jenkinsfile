@@ -29,4 +29,3 @@ post {
             sendToIndividuals: true])
     }
   }
-}
