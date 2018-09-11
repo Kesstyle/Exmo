@@ -19,5 +19,7 @@ stage("Publish") {
 }
 
 stage('Mail'){
-    step([$class: 'Mailer', notifyEveryUnstableBuild: true, recipients: 'kess@tut.by kess2007@mail.ru', sendToIndividuals: true])
+    node {
+        step([$class: 'Mailer', notifyEveryUnstableBuild: true, recipients: 'kess@tut.by kess2007@mail.ru', sendToIndividuals: true])
+    }
 }
