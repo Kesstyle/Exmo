@@ -1,6 +1,6 @@
 stage("Preparation") {
     node {
-        git url: 'https://github.com/Kesstyle/Exmo.git', branch: 'develop'
+        git url: 'https://github.com/Kesstyle/Exmo.git', branch: BRANCH_NAME
         gradleHome = tool "Gradle 4"
     }
 }
