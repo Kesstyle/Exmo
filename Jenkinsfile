@@ -1,4 +1,4 @@
-stages {
+pipeline {stages {
     stage("Preparation") {
         node {
             checkout scm
@@ -28,4 +28,5 @@ post {
             recipients: "kess@tut.by kess2007@mail.ru",
             sendToIndividuals: true])
     }
+  }
   }
