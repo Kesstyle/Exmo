@@ -3,21 +3,21 @@ pipeline {
 
     stages {
         stage("Preparation") {
-            step {
+            steps {
                 checkout scm
                 gradleHome = tool "Gradle 4"
             }
         }
 
         stage("Build") {
-            step {
+            steps {
                 bat("${gradleHome}/bin/gradle clean :exmo-api:jar :coinmarketcap-api:jar")
                 archiveArtifacts artifacts: '**/build/libs/*-api*.jar'
             }
         }
 
         stage("Publish") {
-            step {
+            steps {
                 bat ("${gradleHome}/bin/gradle publish")
             }
         }
