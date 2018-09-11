@@ -46,6 +46,10 @@ allprojects {
 
     def proc = "git rev-parse --abbrev-ref HEAD".execute()
     proc.in.eachLine { line -> branch = line }
+
+    if (System.getenv('BRANCH_NAME') != null) {
+        branch = System.getenv('BRANCH_NAME')
+    }
 }
 
 
