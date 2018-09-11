@@ -19,6 +19,14 @@ stages {
         }
     }
 }
-finally{
-    step([$class: 'Mailer', notifyEveryUnstableBuild: true, recipients: 'kess@tut.by kess2007@mail.ru', sendToIndividuals: true])
+
+
+post {
+    always {
+          step([$class: 'Mailer',
+            notifyEveryUnstableBuild: true,
+            recipients: "kess@tut.by kess2007@mail.ru",
+            sendToIndividuals: true])
+    }
+  }
 }
