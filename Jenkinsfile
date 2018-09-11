@@ -17,3 +17,9 @@ stage("Publish") {
         bat ("${gradleHome}/bin/gradle publish")
     }
 }
+
+stage("Email") {
+    node {
+        step([$class: 'Mailer', notifyEveryUnstableBuild: true, recipients: 'kess@tut.by', sendToIndividuals: true])
+    }
+}
