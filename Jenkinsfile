@@ -29,9 +29,9 @@ pipeline {
     post {
         always {
               step([$class: 'Mailer',
-                notifyEveryUnstableBuild: true,
+                notifyEveryUnstableBuild: false,
                 recipients: "kess@tut.by kess2007@mail.ru",
-                sendToIndividuals: true])
+                sendToIndividuals: false])
         }
     }
 }
