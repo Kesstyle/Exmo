@@ -136,7 +136,7 @@ public class ExmoRestAdapter {
     public final String get(final String baseUrl, final String operation, final Map<String, String> parameters) {
         final OkHttpClient client = new OkHttpClient();
         try {
-            HttpUrl.Builder urlBuilder = HttpUrl.parse(baseUrl + operation + URL_SEPARATOR).newBuilder();
+            4HttpUrl.Builder urlBuilder = HttpUrl.parse(baseUrl + operation + URL_SEPARATOR).newBuilder();
             addQueryParameters(urlBuilder, parameters);
             final String url = urlBuilder.build().toString();
             final Request request = new Request.Builder().url(url).build();
