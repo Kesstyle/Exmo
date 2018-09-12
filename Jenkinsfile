@@ -1,5 +1,5 @@
 pipeline {
-    agent any
+    agent linux
 
     environment {
         gradleHome = tool "Gradle 4"
@@ -14,14 +14,14 @@ pipeline {
 
         stage("Build") {
             steps {
-                bat("${gradleHome}/bin/gradle clean :exmo-api:jar :coinmarketcap-api:jar")
+                sh '"${gradleHome}/bin/gradle clean" :exmo-api:jar :coinmarketcap-api:jar'
                 archiveArtifacts artifacts: '**/build/libs/*-api*.jar'
             }
         }
 
         stage("Publish") {
             steps {
-                bat ("${gradleHome}/bin/gradle publish")
+                sh '"${gradleHome}/bin/gradle" publish'
             }
         }
     }
