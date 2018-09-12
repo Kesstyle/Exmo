@@ -85,7 +85,7 @@ subprojects {
 
         repositories {
             maven {
-                url "$nexusServer/repository/maven-snapshots/"
+                url "$nexusServer/nexus/content/repositories/snapshots"
                 credentials {
                     username "$nexusUser"
                     password "$nexusPassword"

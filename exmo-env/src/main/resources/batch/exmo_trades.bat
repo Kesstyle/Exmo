@@ -1,1 +1,1 @@
-java -jar -Xms128m -Xmx256m -XX:MaxMetaspaceSize=128m -XX:CompressedClassSpaceSize=200m exmo-api-1.1-SNAPSHOT.jar
+java -jar -Xms128m -Xmx256m -XX:MaxMetaspaceSize=128m -XX:CompressedClassSpaceSize=200m exmo-api-1.1.1.0-SNAPSHOT.jar
