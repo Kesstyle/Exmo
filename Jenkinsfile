@@ -18,7 +18,7 @@ pipeline {
 
         stage("Build") {
             steps {
-                sh '"${gradleHome}/bin/gradle clean" :exmo-api:jar :coinmarketcap-api:jar'
+                sh '"${gradleHome}/bin/gradle" clean :exmo-api:jar :coinmarketcap-api:jar'
                 archiveArtifacts artifacts: '**/build/libs/*-api*.jar'
             }
         }
