@@ -1,5 +1,9 @@
 pipeline {
-    agent linux
+    agent {
+        node {
+            label 'linux'
+        }
+    }
 
     environment {
         gradleHome = tool "Gradle 4"
