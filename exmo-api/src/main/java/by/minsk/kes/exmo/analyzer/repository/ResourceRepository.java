@@ -1,4 +1,4 @@
-package by.minsk.kes.exmo.observer.repository;
+package by.minsk.kes.exmo.analyzer.repository;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.jmx.export.annotation.ManagedAttribute;

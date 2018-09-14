@@ -1,9 +1,9 @@
-package by.minsk.kes.exmo.observer.task;
+package by.minsk.kes.exmo.analyzer.task;
 
 import by.minsk.kes.exmo.model.api.ExHistoryTrade;
 import by.minsk.kes.exmo.model.domain.KesUserTradesHistory;
 import by.minsk.kes.exmo.model.domain.Pair;
-import by.minsk.kes.exmo.observer.helper.model.Trading;
+import by.minsk.kes.exmo.analyzer.helper.model.Trading;
 import by.minsk.kes.exmo.transform.converter.KesTradesHistoryConverter;
 import org.apache.commons.collections.MapUtils;
 import org.slf4j.Logger;
@@ -18,7 +18,6 @@ import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.stream.Collectors;
 
 import static java.lang.String.format;

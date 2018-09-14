@@ -1,4 +1,4 @@
-package by.minsk.kes.exmo.observer.task;
+package by.minsk.kes.exmo.analyzer.task;
 
 import by.minsk.kes.exmo.model.api.ExUserInfo;
 import by.minsk.kes.exmo.model.domain.KesUserInfo;

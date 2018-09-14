@@ -1,16 +1,13 @@
-package by.minsk.kes.exmo.observer.task;
+package by.minsk.kes.exmo.analyzer.task;
 
 import by.minsk.kes.exmo.model.api.ExTrade;
 import by.minsk.kes.exmo.model.domain.KesOrder;
 import by.minsk.kes.exmo.model.domain.KesTradingStatistics;
-import by.minsk.kes.exmo.observer.TradesObserver;
+import by.minsk.kes.exmo.analyzer.TradesObserver;
 import by.minsk.kes.exmo.transform.converter.KesTradeConverter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.jmx.export.annotation.ManagedAttribute;
-import org.springframework.jmx.export.annotation.ManagedResource;
 import org.springframework.stereotype.Component;
 
 import java.util.Date;

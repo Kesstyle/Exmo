@@ -1,12 +1,12 @@
-package by.minsk.kes.exmo.observer.task;
+package by.minsk.kes.exmo.analyzer.task;
 
 import by.minsk.kes.exmo.model.domain.KesUserAsk;
 import by.minsk.kes.exmo.model.domain.KesUserInfo;
 import by.minsk.kes.exmo.model.domain.KesUserOrder;
 import by.minsk.kes.exmo.model.domain.Pair;
 import by.minsk.kes.exmo.model.domain.coinmarket.KesCoinMarketTickerQuote;
-import by.minsk.kes.exmo.observer.helper.TradingDecisionHelper;
-import by.minsk.kes.exmo.observer.helper.model.Trading;
+import by.minsk.kes.exmo.analyzer.helper.TradingDecisionHelper;
+import by.minsk.kes.exmo.analyzer.helper.model.Trading;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang3.StringUtils;

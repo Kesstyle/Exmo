@@ -1,8 +1,8 @@
-package by.minsk.kes.exmo.observer.helper;
+package by.minsk.kes.exmo.analyzer.helper;
 
 import by.minsk.kes.exmo.model.domain.KesUserAsk;
 import by.minsk.kes.exmo.model.domain.Pair;
-import by.minsk.kes.exmo.observer.helper.model.Trading;
+import by.minsk.kes.exmo.analyzer.helper.model.Trading;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 

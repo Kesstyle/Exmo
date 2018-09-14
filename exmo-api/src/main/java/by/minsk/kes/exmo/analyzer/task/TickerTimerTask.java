@@ -1,4 +1,4 @@
-package by.minsk.kes.exmo.observer.task;
+package by.minsk.kes.exmo.analyzer.task;
 
 import by.minsk.kes.exmo.model.api.ExTicker;
 import by.minsk.kes.exmo.model.domain.KesTickerInfo;
@@ -7,9 +7,6 @@ import by.minsk.kes.exmo.transform.converter.KesTickerConverter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.jmx.export.annotation.ManagedAttribute;
-import org.springframework.jmx.export.annotation.ManagedResource;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 

@@ -1,4 +1,4 @@
-package by.minsk.kes.exmo.observer.task;
+package by.minsk.kes.exmo.analyzer.task;
 
 import by.minsk.kes.coinmarket.delegate.CoinMarketDelegate;
 import by.minsk.kes.coinmarket.model.CoinMarketTicker;
@@ -10,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.*;
-import java.util.Map.Entry;
 import java.util.stream.Collectors;
 
 @Component("coinMarketTickerTask")

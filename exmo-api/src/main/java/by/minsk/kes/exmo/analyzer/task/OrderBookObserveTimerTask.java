@@ -1,4 +1,4 @@
-package by.minsk.kes.exmo.observer.task;
+package by.minsk.kes.exmo.analyzer.task;
 
 import by.minsk.kes.exmo.model.api.ExOrderBook;
 import by.minsk.kes.exmo.model.domain.KesUserOrder;

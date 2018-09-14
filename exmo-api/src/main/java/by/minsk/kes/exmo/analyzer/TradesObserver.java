@@ -1,4 +1,4 @@
-package by.minsk.kes.exmo.observer;
+package by.minsk.kes.exmo.analyzer;
 
 import by.minsk.kes.exmo.model.domain.*;
 import by.minsk.kes.exmo.transform.converter.PairConverter;

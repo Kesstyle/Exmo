@@ -2,7 +2,7 @@ package by.minsk.kes.exmo.main;
 
 import by.minsk.kes.exmo.configuration.AppConfig;
 import by.minsk.kes.exmo.controller.delegate.ExmoDelegate;
-import by.minsk.kes.exmo.observer.task.*;
+import by.minsk.kes.exmo.analyzer.task.*;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 

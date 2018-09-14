@@ -1,8 +1,8 @@
-package by.minsk.kes.exmo.observer.repository;
+package by.minsk.kes.exmo.analyzer.repository;
 
 import by.minsk.kes.exmo.model.domain.*;
 import by.minsk.kes.exmo.model.domain.coinmarket.KesCoinMarketTickerQuote;
-import by.minsk.kes.exmo.observer.helper.model.Trading;
+import by.minsk.kes.exmo.analyzer.helper.model.Trading;
 import org.apache.commons.collections.ListUtils;
 import org.apache.commons.collections.MapUtils;
 import org.springframework.stereotype.Repository;
