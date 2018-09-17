@@ -16,6 +16,7 @@ public class Main {
     private static final ApplicationContext context = new AnnotationConfigApplicationContext(AppConfig.class);
 
     private static ExmoDelegate delegate;
+    private static ScheduledExecutorService scheduler;
 
     public static void main(String[] args) {
         try {
@@ -104,6 +105,9 @@ public class Main {
     }
 
     private static ScheduledExecutorService getExecutor() {
-        return Executors.newScheduledThreadPool(1);
+        if (scheduler == null) {
+            scheduler = Executors.newScheduledThreadPool(10);
+        }
+        return scheduler;
     }
 }
