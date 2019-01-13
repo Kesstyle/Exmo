@@ -6,7 +6,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.io.Serializable;
 import java.util.Map;
 
-@JsonIgnoreProperties("metadata")
+@JsonIgnoreProperties({"metadata", "attention"})
 public class CoinMarketTickerResponse implements Serializable {
 
     @JsonProperty("data")

@@ -33,7 +33,7 @@ public class CoinMarketParser {
             return mapper.readValue(json, ticker);
         } catch (final IOException e) {
             LOG.error(json);
-            throw new CoinMarketException(json);
+            throw new CoinMarketException(json, e);
         }
     }
 
@@ -47,7 +47,7 @@ public class CoinMarketParser {
             return mapper.readValue(json, tickerResponse);
         } catch (final IOException e) {
             LOG.error(json);
-            throw new CoinMarketException(json);
+            throw new CoinMarketException(json, e);
         }
     }
 
@@ -61,7 +61,7 @@ public class CoinMarketParser {
             return mapper.readValue(json, tickerResponse);
         } catch (final IOException e) {
             LOG.error(json);
-            throw new CoinMarketException(json);
+            throw new CoinMarketException(json, e);
         }
     }
 
@@ -75,7 +75,7 @@ public class CoinMarketParser {
             return mapper.readValue(json, tickerResponse);
         } catch (final IOException e) {
             LOG.error(json);
-            throw new CoinMarketException(json);
+            throw new CoinMarketException(json, e);
         }
     }
 }
