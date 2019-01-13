@@ -1,8 +1,9 @@
 package by.minsk.kes.coinmarket.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class CoinMarketCryptoInfo {
+public class CoinMarketCryptoInfo extends CoinMarketModel {
 
     @JsonProperty("id")
     private String id;
@@ -12,9 +13,6 @@ public class CoinMarketCryptoInfo {
 
     @JsonProperty("symbol")
     private String code;
-
-    @JsonProperty("website_slug")
-    private String websiteSlug;
 
     public String getId() {
         return id;
@@ -38,13 +36,5 @@ public class CoinMarketCryptoInfo {
 
     public void setCode(String code) {
         this.code = code;
-    }
-
-    public String getWebsiteSlug() {
-        return websiteSlug;
-    }
-
-    public void setWebsiteSlug(String websiteSlug) {
-        this.websiteSlug = websiteSlug;
     }
 }

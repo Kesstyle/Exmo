@@ -3,10 +3,10 @@ package by.minsk.kes.coinmarket.legacy;
 import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
+import okhttp3.Request.Builder;
 import okhttp3.Response;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.MapUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -32,12 +32,17 @@ public class CoinMarketCapRestAdapter {
     private boolean logResponses;
 
     public final String get(final String baseUrl, final String operation, final List<String> pathVariables, final Map<String, String> parameters) {
+        return get(baseUrl, operation, pathVariables, parameters, null);
+    }
+
+    public final String get(final String baseUrl, final String operation, final List<String> pathVariables, final Map<String, String> parameters,
+                            final Map<String, String> headers) {
         final OkHttpClient client = new OkHttpClient();
         try {
-            HttpUrl.Builder urlBuilder = HttpUrl.parse(baseUrl + operation + URL_SEPARATOR + getPathVariables(pathVariables)).newBuilder();
+            HttpUrl.Builder urlBuilder = HttpUrl.parse(baseUrl + operation + getPathVariables(pathVariables)).newBuilder();
             addQueryParameters(urlBuilder, parameters);
             final String url = urlBuilder.build().toString();
-            final Request request = new Request.Builder().url(url).build();
+            final Request request = addHeaders(new Builder().url(url), headers).build();
             final Response response = client.newCall(request).execute();
             final String responseJson = response.body().string();
             if (logResponses) {
@@ -48,6 +53,14 @@ public class CoinMarketCapRestAdapter {
             System.err.println("get fail: " + e.toString());
             return null;  // An error occured...
         }
+    }
+
+    private final Builder addHeaders(final Builder requestCallBuilder, final Map<String, String> headers) {
+        if (MapUtils.isEmpty(headers)) {
+            return requestCallBuilder;
+        }
+        headers.entrySet().stream().forEach(v -> requestCallBuilder.addHeader(v.getKey(), v.getValue()));
+        return requestCallBuilder;
     }
 
     private final String getPathVariables(final List<String> pathVariables) {

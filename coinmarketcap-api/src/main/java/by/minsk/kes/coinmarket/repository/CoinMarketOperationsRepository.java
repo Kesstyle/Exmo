@@ -12,6 +12,12 @@ public class CoinMarketOperationsRepository {
     @Value("${coinmarket.listings.operation}")
     private String listingsOperation;
 
+    @Value("${coinmarket.auth.quotes}")
+    private String tickerAuthOperation;
+
+    @Value("${coinmarket.auth.map}")
+    private String mapAuthOperation;
+
     public String getTickerOperation() {
         return tickerOperation;
     }
@@ -26,5 +32,21 @@ public class CoinMarketOperationsRepository {
 
     public void setListingsOperation(String listingsOperation) {
         this.listingsOperation = listingsOperation;
+    }
+
+    public String getTickerAuthOperation() {
+        return tickerAuthOperation;
+    }
+
+    public void setTickerAuthOperation(final String tickerAuthOperation) {
+        this.tickerAuthOperation = tickerAuthOperation;
+    }
+
+    public String getMapAuthOperation() {
+        return mapAuthOperation;
+    }
+
+    public void setMapAuthOperation(final String mapAuthOperation) {
+        this.mapAuthOperation = mapAuthOperation;
     }
 }

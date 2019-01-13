@@ -2,10 +2,9 @@ package by.minsk.kes.coinmarket.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import java.io.Serializable;
 import java.math.BigDecimal;
 
-public class CoinMarketTickerQuote implements Serializable {
+public class CoinMarketTickerQuote extends CoinMarketModel {
 
     @JsonProperty("price")
     private BigDecimal price;

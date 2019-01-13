@@ -1,6 +1,9 @@
 package by.minsk.kes.coinmarket.transform.parser;
 
 import by.minsk.kes.coinmarket.model.*;
+import by.minsk.kes.coinmarket.model.response.CoinMarketListingsResponse;
+import by.minsk.kes.coinmarket.model.response.CoinMarketSpecificTickerResponse;
+import by.minsk.kes.coinmarket.model.response.CoinMarketTickerResponse;
 import by.minsk.kes.coinmarket.transform.parser.exception.CoinMarketException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;

@@ -26,7 +26,7 @@ public class KesCoinMarketTickerConverter extends GenericStringKeyConverter<KesC
         kesTicker.setRank(source.getRank());
         kesTicker.setTotalSupply(source.getTotalSupply());
         kesTicker.setMaxSupply(source.getMaxSupply());
-        kesTicker.setLastUpdated(getDateFromUnix(source.getLastUpdated(), true));
+        kesTicker.setLastUpdated(getDateFromString(source.getLastUpdated()));
         kesTicker.setQuotes(quoteConverter.convertMap(source.getQuotes()));
         return kesTicker;
     }

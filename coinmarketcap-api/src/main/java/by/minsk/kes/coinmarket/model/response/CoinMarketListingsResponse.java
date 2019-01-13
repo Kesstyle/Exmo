@@ -1,13 +1,12 @@
-package by.minsk.kes.coinmarket.model;
+package by.minsk.kes.coinmarket.model.response;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import by.minsk.kes.coinmarket.model.CoinMarketCryptoInfo;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.List;
 
-@JsonIgnoreProperties({"metadata", "attention"})
-public class CoinMarketListingsResponse {
+public class CoinMarketListingsResponse extends CoinMarketBasicResponse {
 
     @JsonProperty("data")
     private List<CoinMarketCryptoInfo> info;

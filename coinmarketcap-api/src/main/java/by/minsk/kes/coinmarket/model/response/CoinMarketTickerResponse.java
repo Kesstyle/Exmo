@@ -1,13 +1,12 @@
-package by.minsk.kes.coinmarket.model;
+package by.minsk.kes.coinmarket.model.response;
 
+import by.minsk.kes.coinmarket.model.CoinMarketTicker;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import java.io.Serializable;
 import java.util.Map;
 
-@JsonIgnoreProperties({"metadata", "attention"})
-public class CoinMarketTickerResponse implements Serializable {
+public class CoinMarketTickerResponse extends CoinMarketBasicResponse {
 
     @JsonProperty("data")
     private Map<String, CoinMarketTicker> ticker;

@@ -6,8 +6,12 @@ import by.minsk.kes.exmo.transform.converter.GenericStringKeyConverter;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Component;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
+
+import static java.math.RoundingMode.HALF_UP;
 
 @Component
 public class KesCoinMarketTickerQuoteConverter extends GenericStringKeyConverter<KesCoinMarketTickerQuote, CoinMarketTickerQuote> {
@@ -19,6 +23,7 @@ public class KesCoinMarketTickerQuoteConverter extends GenericStringKeyConverter
         }
         final KesCoinMarketTickerQuote kesQuote = new KesCoinMarketTickerQuote();
         BeanUtils.copyProperties(source, kesQuote);
+        kesQuote.setPrice(kesQuote.getPrice().setScale(10, HALF_UP));
         return kesQuote;
     }
 

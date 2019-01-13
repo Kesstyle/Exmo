@@ -1,12 +1,14 @@
 package by.minsk.kes.exmo.analyzer.task;
 
 import by.minsk.kes.coinmarket.delegate.CoinMarketDelegate;
+import by.minsk.kes.coinmarket.delegate.CoinMarketLegacyDelegate;
 import by.minsk.kes.coinmarket.model.CoinMarketTicker;
 import by.minsk.kes.exmo.model.domain.Pair;
 import by.minsk.kes.exmo.model.domain.coinmarket.KesCoinMarketTicker;
 import by.minsk.kes.exmo.model.domain.coinmarket.KesCoinMarketTickerQuote;
 import by.minsk.kes.exmo.transform.converter.coinmarket.KesCoinMarketTickerConverter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 import java.util.*;
@@ -16,6 +18,7 @@ import java.util.stream.Collectors;
 public class CoinMarketTickerTimerTask extends KesTimerTask {
 
     @Autowired
+    @Qualifier("coinMarketAuthDelegate")
     private CoinMarketDelegate coinMarketDelegate;
 
     @Autowired

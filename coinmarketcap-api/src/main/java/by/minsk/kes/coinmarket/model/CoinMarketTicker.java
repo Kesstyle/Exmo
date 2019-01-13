@@ -2,37 +2,42 @@ package by.minsk.kes.coinmarket.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import java.io.Serializable;
 import java.math.BigDecimal;
-import java.util.List;
 import java.util.Map;
 
 /**
- * "1720": {
- *             "id": 1720,
- *             "name": "IOTA",
- *             "symbol": "MIOTA",
- *             "website_slug": "iota",
- *             "rank": 10,
- *             "circulating_supply": 2779530283.0,
- *             "total_supply": 2779530283.0,
- *             "max_supply": 2779530283.0,
- *             "quotes": {
- *                 "USD": {
- *                     "price": 0.972983,
- *                     "volume_24h": 32880200.0,
- *                     "market_cap": 2704435713.0,
- *                     "percent_change_1h": -1.57,
- *                     "percent_change_24h": 2.17,
- *                     "percent_change_7d": -8.05
- *                 }
- *             },
- *             "last_updated": 1531509691
- *         },
+ * "2": {
+ * "id": 2,
+ * "name": "Litecoin",
+ * "symbol": "LTC",
+ * "slug": "litecoin",
+ * "circulating_supply": 60002350.2148228,
+ * "total_supply": 60002350.2148228,
+ * "max_supply": 84000000,
+ * "date_added": "2013-04-28T00:00:00.000Z",
+ * "num_market_pairs": 724,
+ * "tags": [
+ * "mineable"
+ * ],
+ * "platform": null,
+ * "cmc_rank": 8,
+ * "last_updated": "2019-01-13T15:08:04.000Z",
+ * "quote": {
+ * "BTC": {
+ * "price": 0.008875119974835047,
+ * "volume_24h": 143069.74501689558,
+ * "percent_change_1h": 0.1303,
+ * "percent_change_24h": 0.7358,
+ * "percent_change_7d": -9.7063,
+ * "market_cap": 532528.0569286217,
+ * "last_updated": "2019-01-13T15:08:23.000Z"
+ * }
+ * }
+ * },
  */
-public class CoinMarketTicker extends CoinMarketCryptoInfo implements Serializable {
+public class CoinMarketTicker extends CoinMarketCryptoInfo {
 
-    @JsonProperty("rank")
+    @JsonProperty("cmc_rank")
     private int rank;
 
     @JsonProperty("circulating_supply")
@@ -44,11 +49,11 @@ public class CoinMarketTicker extends CoinMarketCryptoInfo implements Serializab
     @JsonProperty("max_supply")
     private BigDecimal maxSupply;
 
-    @JsonProperty("quotes")
+    @JsonProperty("quote")
     private Map<String, CoinMarketTickerQuote> quotes;
 
     @JsonProperty("last_updated")
-    private Long lastUpdated;
+    private String lastUpdated;
 
     public int getRank() {
         return rank;
@@ -90,11 +95,11 @@ public class CoinMarketTicker extends CoinMarketCryptoInfo implements Serializab
         this.quotes = quotes;
     }
 
-    public Long getLastUpdated() {
+    public String getLastUpdated() {
         return lastUpdated;
     }
 
-    public void setLastUpdated(Long lastUpdated) {
+    public void setLastUpdated(String lastUpdated) {
         this.lastUpdated = lastUpdated;
     }
 }
